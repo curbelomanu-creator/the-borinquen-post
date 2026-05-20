@@ -3,6 +3,7 @@ layout: post
 title: "Araceli amplía su plataforma de imagen celular con una solución para biología viva y cribado de alta velocidad"
 description: "Araceli Biosciences presentó Endeavor Live Cell, una solución de imagen cinética para placas de 1,536 pocillos que busca acelerar el descubrimiento de fármacos con inteligencia artificial."
 category: "Ciencia"
+categories: ["ciencia"]
 image: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80"
 image_alt: "Laboratorio de biotecnología con microscopio y equipos de análisis celular en un entorno científico"
 read_time: "4 min read"

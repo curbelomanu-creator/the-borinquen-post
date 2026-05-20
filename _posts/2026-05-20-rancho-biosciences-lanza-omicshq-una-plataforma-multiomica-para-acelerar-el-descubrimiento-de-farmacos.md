@@ -3,6 +3,7 @@ layout: post
 title: "Rancho BioSciences lanza OmicsHQ™, una plataforma multiómica para acelerar el descubrimiento de fármacos"
 description: "Rancho BioSciences presentó OmicsHQ™, una plataforma de datos multiómicos curados y estandarizados con más de 1,000 conjuntos de datos listos para acelerar investigación, IA y descubrimiento de fármacos."
 category: "Empresas"
+categories: ["empresas"]
 image: ""
 read_time: "4 min read"
 ---

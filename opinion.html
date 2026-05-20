@@ -9,8 +9,8 @@ permalink: /opinion/
 </section>
 <section class="section-title"><h2>Artículos recientes</h2></section>
 <div class="grid">
-{% assign filtered_posts = site.posts | where: 'category_slug', 'opinion' %}
-{% for post in filtered_posts limit: 9 %}
+{% assign category_posts = site.posts | where_exp: "post", "post.categories contains 'opinion'" %}
+{% for post in category_posts limit: 9 %}
   <article class="card">
     {% if post.image %}<img src="{{ post.image | relative_url }}" alt="{{ post.title }}">{% endif %}
     <div class="category">{{ post.category }}</div>
