@@ -2,7 +2,17 @@
 layout: default
 title: Inicio
 ---
-<section class="section-title"><h2>Últimas noticias</h2></section>
+<section class="home-hero">
+  <div class="home-hero-content">
+    <h1>Información estratégica<br>para líderes y empresas.</h1>
+    <p>
+      Noticias, análisis y perspectivas de Puerto Rico<br>
+      para tomar mejores decisiones de negocio.
+    </p>
+    <a href="#ultimas-noticias" class="home-hero-button">Leer análisis</a>
+  </div>
+</section>
+<section id="ultimas-noticias" class="section-title"><h2>Últimas noticias</h2></section>
 <div class="grid">
   {% for post in site.posts limit: 9 %}
   <article class="card">
