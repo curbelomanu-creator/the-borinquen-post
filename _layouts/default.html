@@ -10,12 +10,62 @@
   {% include header.html %}
   {% include nav.html %}
   <main class="container">{{ content }}</main>
-  <footer>
+  <footer class="site-footer">
+    <div class="footer-top-line"></div>
     <div class="footer-grid">
-      <div><h2>{{ site.title }}</h2><p>Información estratégica para líderes y empresas.</p></div>
-      <div><h3>Secciones</h3><a href="{{ '/economia/' | relative_url }}">Economía</a><a href="{{ '/empresas/' | relative_url }}">Empresas</a><a href="{{ '/gobierno/' | relative_url }}">Gobierno</a></div>
-      <div><h3>Publicación</h3><p>Edición digital con enfoque editorial profesional.</p></div>
+      <section class="footer-brand">
+        <h2>{{ site.title }}</h2>
+        <p>Periodismo de negocios con enfoque analítico, cobertura institucional y criterios editoriales verificables.</p>
+      </section>
+      <section>
+        <h3>Secciones</h3>
+        <a href="{{ '/economia/' | relative_url }}">Economía</a>
+        <a href="{{ '/empresas/' | relative_url }}">Empresas</a>
+        <a href="{{ '/gobierno/' | relative_url }}">Gobierno</a>
+        <a href="{{ '/mercados/' | relative_url }}">Mercados</a>
+      </section>
+      <section>
+        <h3>Institucional</h3>
+        <p>Edición digital diaria</p>
+        <p>San Juan, Puerto Rico</p>
+        <p>contacto@borinquenpost.com</p>
+      </section>
+    </div>
+    <div class="footer-bottom">
+      <p>© {{ "now" | date: "%Y" }} {{ site.title }}. Todos los derechos reservados.</p>
+      <p>Política editorial · Términos de uso · Privacidad</p>
     </div>
   </footer>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const dateElement = document.getElementById("current-date");
+
+      if (dateElement) {
+        const now = new Date();
+        const weekday = now.toLocaleDateString("en-US", { weekday: "long" });
+        const day = now.getDate();
+        const month = now.toLocaleDateString("en-US", { month: "long" });
+        const year = now.getFullYear();
+
+        dateElement.textContent = `${weekday}, ${day} de ${month} de ${year}`;
+      }
+
+      const tempElement = document.getElementById("san-juan-temp");
+
+      if (tempElement) {
+        fetch("https://api.open-meteo.com/v1/forecast?latitude=18.4655&longitude=-66.1057&current=temperature_2m&temperature_unit=fahrenheit&timezone=America%2FPuerto_Rico")
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (data) {
+            const temp = Math.round(data.current.temperature_2m);
+            tempElement.textContent = `${temp}°F`;
+          })
+          .catch(function () {
+            tempElement.textContent = "82°F";
+          });
+      }
+    });
+  </script>
 </body>
 </html>
