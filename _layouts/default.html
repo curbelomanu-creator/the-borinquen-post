@@ -53,16 +53,16 @@
       const tempElement = document.getElementById("san-juan-temp");
 
       if (tempElement) {
-        fetch("https://api.open-meteo.com/v1/forecast?latitude=18.4655&longitude=-66.1057&current=temperature_2m&timezone=America%2FPuerto_Rico")
+        fetch("https://api.open-meteo.com/v1/forecast?latitude=18.4655&longitude=-66.1057&current=temperature_2m&temperature_unit=fahrenheit&timezone=America%2FPuerto_Rico")
           .then(function (response) {
             return response.json();
           })
           .then(function (data) {
             const temp = Math.round(data.current.temperature_2m);
-            tempElement.textContent = `${temp}°C`;
+            tempElement.textContent = `${temp}°F`;
           })
           .catch(function () {
-            tempElement.textContent = "28°C";
+            tempElement.textContent = "82°F";
           });
       }
     });
