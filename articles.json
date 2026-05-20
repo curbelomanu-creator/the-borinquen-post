@@ -1,0 +1,101 @@
+[
+  {
+    "title": "Puerto Rico proyecta crecimiento moderado para 2025",
+    "slug": "puerto-rico-proyecta-crecimiento-moderado-2025",
+    "date": "2025-05-20",
+    "category": "Economía",
+    "author": "The Borinquen Post",
+    "excerpt": "El BDE anticipa un ritmo estable impulsado por servicios y manufactura.",
+    "image": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80",
+    "url": "articles/puerto-rico-proyecta-crecimiento-moderado-2025.html",
+    "readTime": "5 min read"
+  },
+  {
+    "title": "Empresas locales aceleran adopción de inteligencia artificial",
+    "slug": "empresas-locales-aceleran-adopcion-ia",
+    "date": "2025-05-19",
+    "category": "Tecnología",
+    "author": "The Borinquen Post",
+    "excerpt": "Las compañías priorizan automatización comercial y analítica avanzada.",
+    "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80",
+    "url": "articles/empresas-locales-aceleran-adopcion-ia.html",
+    "readTime": "4 min read"
+  },
+  {
+    "title": "Nuevas medidas para permisos estratégicos",
+    "slug": "nuevas-medidas-permisos-estrategicos",
+    "date": "2025-05-20",
+    "category": "Gobierno",
+    "author": "The Borinquen Post",
+    "excerpt": "El gobierno propone simplificar procesos para acelerar inversión.",
+    "image": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80",
+    "url": "articles/nuevas-medidas-permisos-estrategicos.html",
+    "readTime": "6 min read"
+  },
+  {
+    "title": "Mercados regionales muestran mayor liquidez",
+    "slug": "mercados-regionales-muestran-mayor-liquidez",
+    "date": "2025-05-18",
+    "category": "Mercados",
+    "author": "The Borinquen Post",
+    "excerpt": "Aumenta el interés institucional en instrumentos caribeños.",
+    "image": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80",
+    "url": "articles/mercados-regionales-muestran-mayor-liquidez.html",
+    "readTime": "4 min read"
+  },
+  {
+    "title": "Cooperación internacional impulsa logística",
+    "slug": "cooperacion-internacional-impulsa-logistica",
+    "date": "2025-05-17",
+    "category": "Internacional",
+    "author": "The Borinquen Post",
+    "excerpt": "Alianzas nuevas abren rutas de abastecimiento más eficientes.",
+    "image": "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1200&q=80",
+    "url": "articles/cooperacion-internacional-impulsa-logistica.html",
+    "readTime": "5 min read"
+  },
+  {
+    "title": "Avances científicos fortalecen salud pública",
+    "slug": "avances-cientificos-fortalecen-salud-publica",
+    "date": "2025-05-16",
+    "category": "Ciencia",
+    "author": "The Borinquen Post",
+    "excerpt": "Centros de investigación presentan hallazgos clave en prevención.",
+    "image": "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=1200&q=80",
+    "url": "articles/avances-cientificos-fortalecen-salud-publica.html",
+    "readTime": "5 min read"
+  },
+  {
+    "title": "Empresas apuestan por expansión regional",
+    "slug": "empresas-apuestan-expansion-regional",
+    "date": "2025-05-19",
+    "category": "Empresas",
+    "author": "The Borinquen Post",
+    "excerpt": "Ejecutivos refuerzan alianzas para crecer en el Caribe.",
+    "image": "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80",
+    "url": "articles/empresas-apuestan-expansion-regional.html",
+    "readTime": "4 min read"
+  },
+  {
+    "title": "Análisis: señales mixtas en consumo privado",
+    "slug": "analisis-senales-mixtas-consumo-privado",
+    "date": "2025-05-18",
+    "category": "Análisis",
+    "author": "The Borinquen Post",
+    "excerpt": "El gasto de hogares mantiene resiliencia con presiones inflacionarias.",
+    "image": "https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1200&q=80",
+    "url": "articles/analisis-senales-mixtas-consumo-privado.html",
+    "readTime": "7 min read"
+  },
+  {
+    "title": "Opinión: información confiable para decidir",
+    "slug": "opinion-informacion-confiable-para-decidir",
+    "date": "2025-05-18",
+    "category": "Opinión",
+    "author": "The Borinquen Post",
+    "excerpt": "La calidad informativa se vuelve ventaja estratégica empresarial.",
+    "image": "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1200&q=80",
+    "url": "articles/opinion-informacion-confiable-para-decidir.html",
+    "readTime": "5 min read"
+  }
+]
