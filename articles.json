@@ -6,7 +6,7 @@
     "category": "Economía",
     "author": "The Borinquen Post",
     "excerpt": "El BDE anticipa un ritmo estable impulsado por servicios y manufactura.",
-    "image": "assets/images/default.jpg",
+    "image": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80",
     "url": "articles/puerto-rico-proyecta-crecimiento-moderado-2025.html",
     "readTime": "5 min read"
   },
@@ -17,7 +17,7 @@
     "category": "Tecnología",
     "author": "The Borinquen Post",
     "excerpt": "Las compañías priorizan automatización comercial y analítica avanzada.",
-    "image": "assets/images/default.jpg",
+    "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80",
     "url": "articles/empresas-locales-aceleran-adopcion-ia.html",
     "readTime": "4 min read"
   },
@@ -28,7 +28,7 @@
     "category": "Gobierno",
     "author": "The Borinquen Post",
     "excerpt": "El gobierno propone simplificar procesos para acelerar inversión.",
-    "image": "assets/images/default.jpg",
+    "image": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80",
     "url": "articles/nuevas-medidas-permisos-estrategicos.html",
     "readTime": "6 min read"
   },
@@ -39,7 +39,7 @@
     "category": "Mercados",
     "author": "The Borinquen Post",
     "excerpt": "Aumenta el interés institucional en instrumentos caribeños.",
-    "image": "assets/images/default.jpg",
+    "image": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80",
     "url": "articles/mercados-regionales-muestran-mayor-liquidez.html",
     "readTime": "4 min read"
   },
@@ -50,7 +50,7 @@
     "category": "Internacional",
     "author": "The Borinquen Post",
     "excerpt": "Alianzas nuevas abren rutas de abastecimiento más eficientes.",
-    "image": "assets/images/default.jpg",
+    "image": "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1200&q=80",
     "url": "articles/cooperacion-internacional-impulsa-logistica.html",
     "readTime": "5 min read"
   },
@@ -61,7 +61,7 @@
     "category": "Ciencia",
     "author": "The Borinquen Post",
     "excerpt": "Centros de investigación presentan hallazgos clave en prevención.",
-    "image": "assets/images/default.jpg",
+    "image": "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=1200&q=80",
     "url": "articles/avances-cientificos-fortalecen-salud-publica.html",
     "readTime": "5 min read"
   },
@@ -72,7 +72,7 @@
     "category": "Empresas",
     "author": "The Borinquen Post",
     "excerpt": "Ejecutivos refuerzan alianzas para crecer en el Caribe.",
-    "image": "assets/images/default.jpg",
+    "image": "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80",
     "url": "articles/empresas-apuestan-expansion-regional.html",
     "readTime": "4 min read"
   },
@@ -83,7 +83,7 @@
     "category": "Análisis",
     "author": "The Borinquen Post",
     "excerpt": "El gasto de hogares mantiene resiliencia con presiones inflacionarias.",
-    "image": "assets/images/default.jpg",
+    "image": "https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1200&q=80",
     "url": "articles/analisis-senales-mixtas-consumo-privado.html",
     "readTime": "7 min read"
   },
@@ -94,7 +94,7 @@
     "category": "Opinión",
     "author": "The Borinquen Post",
     "excerpt": "La calidad informativa se vuelve ventaja estratégica empresarial.",
-    "image": "assets/images/default.jpg",
+    "image": "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1200&q=80",
     "url": "articles/opinion-informacion-confiable-para-decidir.html",
     "readTime": "5 min read"
   }

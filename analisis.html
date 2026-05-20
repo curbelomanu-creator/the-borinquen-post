@@ -1,62 +1,27 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Análisis | The Borinquen Post</title><style>
-:root {
-  --azul-oscuro: #061a33;
-  --azul-principal: #0b2c55;
-  --azul-medio: #123f73;
-  --azul-claro: #eaf1f8;
-  --blanco: #ffffff;
-  --gris-texto: #4b5563;
-  --gris-borde: #d8dee8;
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Análisis | The Borinquen Post</title><style>
+:root{--azul-oscuro:#061a33;--azul-principal:#0b2c55;--azul-medio:#123f73;--azul-claro:#eaf1f8;--blanco:#fff;--gris-texto:#4b5563;--gris-borde:#d8dee8}
+*{margin:0;padding:0;box-sizing:border-box} body{font-family:Georgia,"Times New Roman",serif;background:var(--blanco);color:var(--azul-oscuro);line-height:1.6}
+a{text-decoration:none;color:inherit}img{width:100%;display:block}
+.top-bar{background:var(--azul-oscuro);color:#fff;font-family:Arial,sans-serif;font-size:14px;padding:10px 5%;display:flex;justify-content:space-between;align-items:center;gap:12px}.top-left,.top-right{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+header{padding:20px 5%;border-bottom:1px solid var(--gris-borde)}.brand-area{display:flex;align-items:center;justify-content:flex-start}.logo-box{width:min(100%,260px)}.logo-box img{width:100%;height:auto;display:block}
+nav{padding:0 5%;border-bottom:1px solid var(--gris-borde)}.nav-menu{display:flex;gap:32px;list-style:none;font-family:Arial,sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:1.2px;overflow-x:auto;padding-bottom:2px}.nav-menu a{display:block;padding:14px 0;border-bottom:3px solid transparent}.nav-menu a.active,.nav-menu a:hover{border-bottom-color:var(--azul-principal);color:var(--azul-principal)}
+.container{width:90%;max-width:1300px;margin:30px auto}.section-title{display:flex;align-items:center;gap:16px;margin:25px 0 16px}.section-title h2{font-size:20px;text-transform:uppercase;letter-spacing:1.6px;white-space:nowrap}.section-title:after{content:"";height:1px;background:var(--gris-borde);flex:1}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.card{border:1px solid var(--gris-borde);background:#fff;padding:14px;display:flex;flex-direction:column;gap:10px}.card img{height:170px;object-fit:cover;background:#f3f6fa}.category{font-family:Arial,sans-serif;font-size:11px;text-transform:uppercase;color:var(--azul-medio);font-weight:700;letter-spacing:1px}.card h3{font-size:22px;line-height:1.2}.meta{font-family:Arial,sans-serif;font-size:13px;color:#6b7280}.excerpt{color:var(--gris-texto);font-size:16px}
+.article-layout{max-width:900px;margin:34px auto}.article-title{font-size:46px;line-height:1.1;margin-bottom:16px}.article-hero{width:100%;height:420px;object-fit:cover;border:1px solid var(--gris-borde);margin:20px 0;background:#f3f6fa}.article-body p{margin-bottom:18px;font-size:20px;color:#1f2f44}.back-link{font-family:Arial,sans-serif;color:var(--azul-medio);font-weight:700;margin:18px 0;display:inline-block}
+footer{margin-top:56px;background:var(--azul-oscuro);color:#d7dfeb;padding:42px 5%;font-family:Arial,sans-serif}.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:24px;max-width:1300px;margin:auto}footer h2{color:#fff;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}footer h3{color:var(--azul-claro);text-transform:uppercase;font-size:13px;letter-spacing:1.4px;margin-bottom:12px}footer a,footer p{display:block;margin-bottom:8px}
+@media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}.footer-grid{grid-template-columns:1fr}}@media(max-width:700px){.top-bar{flex-direction:column;align-items:flex-start}.grid{grid-template-columns:1fr}.article-title{font-size:34px}.article-hero{height:260px}}
+</style></head><body><div class="top-bar"><div class="top-left"><span>Martes, 20 de mayo de 2025</span><span>San Juan, PR</span><span>28°C</span></div><div class="top-right"><a href="#">Newsletter</a><a href="#">Podcasts</a><a href="#">Eventos</a><a href="#">Sobre Nosotros</a><a href="#">Contacto</a></div></div><header><div class="brand-area"><div class="logo-box"><img src="The Borinquen Post.jpeg" alt="The Borinquen Post"></div></div></header><nav><ul class="nav-menu"><li><a href="index.html" class="">Inicio</a></li><li><a href="economia.html" class="">Economía</a></li><li><a href="empresas.html" class="">Empresas</a></li><li><a href="gobierno.html" class="">Gobierno</a></li><li><a href="tecnologia.html" class="">Tecnología</a></li><li><a href="mercados.html" class="">Mercados</a></li><li><a href="internacional.html" class="">Internacional</a></li><li><a href="ciencia.html" class="">Ciencia</a></li><li><a href="analisis.html" class="active">Análisis</a></li><li><a href="opinion.html" class="">Opinión</a></li></ul></nav><main class="container"><div class="section-title"><h2>Análisis</h2></div><div id="category-grid" class="grid"></div></main><footer><div class="footer-grid"><div><h2>The Borinquen Post</h2><p>Información estratégica para líderes y empresas.</p></div><div><h3>Secciones</h3><a href="economia.html">Economía</a><a href="empresas.html">Empresas</a><a href="gobierno.html">Gobierno</a></div><div><h3>Automatización</h3><p>n8n crea HTML en /articles/ y actualiza articles.json.</p></div></div></footer><script>
+// Esta página filtra por una categoría usando articles.json.
+const CATEGORY="Análisis";
+
+function resolveImagePath(imagePath, fromArticlesDir = false) {
+  const fallback = fromArticlesDir ? 'https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=1200&q=80' : 'https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=1200&q=80';
+  if (!imagePath || typeof imagePath !== 'string') return fallback;
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) return imagePath;
+  if (fromArticlesDir) return imagePath.startsWith('../') ? imagePath : `../${imagePath}`;
+  return imagePath;
 }
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Georgia,"Times New Roman",serif;background:var(--blanco);color:var(--azul-oscuro);line-height:1.6}
-a{text-decoration:none;color:inherit}
-img{width:100%;display:block}
-.top-bar{background:var(--azul-oscuro);color:var(--blanco);font-family:Arial,sans-serif;font-size:14px;padding:10px 5%;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.top-left,.top-right{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
-header{padding:20px 5%;border-bottom:1px solid var(--gris-borde)}
-.brand-area{display:flex;align-items:center;justify-content:flex-start}
-.logo-box{width:min(100%,260px)}
-.logo-box img{width:100%;height:auto;display:block}
-nav{padding:0 5%;border-bottom:1px solid var(--gris-borde)}
-.nav-menu{display:flex;gap:32px;list-style:none;font-family:Arial,sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:1.2px;overflow-x:auto;padding-bottom:2px}
-.nav-menu a{display:block;padding:14px 0;border-bottom:3px solid transparent}
-.nav-menu a.active,.nav-menu a:hover{border-bottom-color:var(--azul-principal);color:var(--azul-principal)}
-.container{width:90%;max-width:1300px;margin:30px auto}
-.section-title{display:flex;align-items:center;gap:16px;margin:25px 0 16px}
-.section-title h2{font-size:20px;text-transform:uppercase;letter-spacing:1.6px;white-space:nowrap}
-.section-title:after{content:"";height:1px;background:var(--gris-borde);flex:1}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.card{border:1px solid var(--gris-borde);background:#fff;padding:14px;display:flex;flex-direction:column;gap:10px}
-.card img{height:170px;object-fit:cover}
-.category{font-family:Arial,sans-serif;font-size:11px;text-transform:uppercase;color:var(--azul-medio);font-weight:700;letter-spacing:1px}
-.card h3{font-size:22px;line-height:1.2}
-.meta{font-family:Arial,sans-serif;font-size:13px;color:#6b7280}
-.excerpt{color:var(--gris-texto);font-size:16px}
-footer{margin-top:56px;background:var(--azul-oscuro);color:#d7dfeb;padding:42px 5%;font-family:Arial,sans-serif}
-.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:24px;max-width:1300px;margin:auto}
-footer h2{color:#fff;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
-footer h3{color:var(--azul-claro);text-transform:uppercase;font-size:13px;letter-spacing:1.4px;margin-bottom:12px}
-footer a,footer p{display:block;margin-bottom:8px}
-.article-layout{max-width:900px;margin:34px auto}
-.article-title{font-size:48px;line-height:1.1;margin-bottom:16px}
-.article-body p{margin-bottom:18px;font-size:20px;color:#1f2f44}
-.back-link{font-family:Arial,sans-serif;color:var(--azul-medio);font-weight:700;margin:18px 0;display:inline-block}
-@media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}.footer-grid{grid-template-columns:1fr}}
-@media(max-width:700px){.top-bar{flex-direction:column;align-items:flex-start}.grid{grid-template-columns:1fr}.article-title{font-size:34px}}
-</style></head><body><div class="top-bar"><div class="top-left"><span>Martes, 20 de mayo de 2025</span><span>San Juan, PR</span><span>28°C</span></div><div class="top-right"><a href="#">Newsletter</a><a href="#">Podcasts</a><a href="#">Eventos</a><a href="#">Sobre Nosotros</a><a href="#">Contacto</a></div></div>
-<header><div class="brand-area"><div class="logo-box"><img src="The Borinquen Post.jpeg" alt="The Borinquen Post" /></div></div></header>
-<nav><ul class="nav-menu"><li><a href="index.html" class="">Inicio</a></li><li><a href="economia.html" class="">Economía</a></li><li><a href="empresas.html" class="">Empresas</a></li><li><a href="gobierno.html" class="">Gobierno</a></li><li><a href="tecnologia.html" class="">Tecnología</a></li><li><a href="mercados.html" class="">Mercados</a></li><li><a href="internacional.html" class="">Internacional</a></li><li><a href="ciencia.html" class="">Ciencia</a></li><li><a href="analisis.html" class="active">Análisis</a></li><li><a href="opinion.html" class="">Opinión</a></li></ul></nav>
-<main class="container"><div class="section-title"><h2>Análisis</h2></div><div id="category-grid" class="grid"></div></main>
-<footer><div class="footer-grid"><div><h2>The Borinquen Post</h2></div></div></footer>
-<script>
-const CATEGORY = "Análisis";
-// Filtrado de categoría: esta página muestra todos los artículos de CATEGORY, ordenados por fecha descendente.
-async function loadCategory(){
-  const res = await fetch('articles.json');
-  const articles = await res.json();
-  const filtered = articles.filter(a=>a.category===CATEGORY).sort((a,b)=>new Date(b.date)-new Date(a.date));
-  document.getElementById('category-grid').innerHTML = filtered.map(a=>`<article class="card"><img src="${a.image}" alt="${a.title}"><div class="category">${a.category}</div><h3><a href="${a.url}">${a.title}</a></h3><p class="excerpt">${a.excerpt}</p><div class="meta">${a.date} · ${a.readTime}</div></article>`).join('');
-}
-loadCategory();
-</script></body></html>
+function onImageError(img, fromArticlesDir = false){img.onerror=null;img.src = fromArticlesDir ? 'https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=1200&q=80' : 'https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=1200&q=80';}
+
+async function loadCategory(){const res=await fetch('articles.json');const articles=await res.json();const filtered=articles.filter(a=>a.category===CATEGORY).sort((a,b)=>new Date(b.date)-new Date(a.date));document.getElementById('category-grid').innerHTML=filtered.map(a=>`<article class="card"><img src="${resolveImagePath(a.image,false)}" alt="${a.title}" onerror="onImageError(this,false)"><div class="category">${a.category}</div><h3><a href="${a.url}">${a.title}</a></h3><p class="excerpt">${a.excerpt}</p><div class="meta">${a.date} · ${a.readTime}</div></article>`).join('');}
+loadCategory();</script></body></html>
