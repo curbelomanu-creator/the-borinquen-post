@@ -2,6 +2,7 @@
 layout: post
 title: "The Borinquen Post lanza su nueva edición digital"
 category: "Empresas"
+categories: ["empresas"]
 category_slug: "empresas"
 author: "Redacción TBP"
 image: "https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=1200&q=80"
