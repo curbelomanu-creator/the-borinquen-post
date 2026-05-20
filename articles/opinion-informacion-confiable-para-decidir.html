@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>The Borinquen Post</title><style>
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Opinión: información confiable para decidir | The Borinquen Post</title><style>
 :root {
   --azul-oscuro: #061a33;
   --azul-principal: #0b2c55;
@@ -46,37 +46,6 @@ footer a,footer p{display:block;margin-bottom:8px}
 @media(max-width:700px){.top-bar{flex-direction:column;align-items:flex-start}.grid{grid-template-columns:1fr}.article-title{font-size:34px}}
 </style></head><body><div class="top-bar"><div class="top-left"><span>Martes, 20 de mayo de 2025</span><span>San Juan, PR</span><span>28°C</span></div><div class="top-right"><a href="#">Newsletter</a><a href="#">Podcasts</a><a href="#">Eventos</a><a href="#">Sobre Nosotros</a><a href="#">Contacto</a></div></div>
 <header><div class="brand-area"><div class="logo-box"><img src="The Borinquen Post.jpeg" alt="The Borinquen Post" /></div></div></header>
-<nav><ul class="nav-menu"><li><a href="index.html" class="active">Inicio</a></li><li><a href="economia.html" class="">Economía</a></li><li><a href="empresas.html" class="">Empresas</a></li><li><a href="gobierno.html" class="">Gobierno</a></li><li><a href="tecnologia.html" class="">Tecnología</a></li><li><a href="mercados.html" class="">Mercados</a></li><li><a href="internacional.html" class="">Internacional</a></li><li><a href="ciencia.html" class="">Ciencia</a></li><li><a href="analisis.html" class="">Análisis</a></li><li><a href="opinion.html" class="">Opinión</a></li></ul></nav>
-<main class="container">
-  <section class="section-title"><h2>Últimas noticias</h2></section>
-  <div id="latest-news" class="grid"></div>
-  <div id="category-sections"></div>
-</main>
-<footer><div class="footer-grid"><div><h2>The Borinquen Post</h2><p>Información estratégica para líderes y empresas.</p></div><div><h3>Secciones</h3><a href="economia.html">Economía</a><a href="empresas.html">Empresas</a><a href="gobierno.html">Gobierno</a></div><div><h3>Automatización</h3><p>n8n agrega artículos en /articles/ y actualiza articles.json.</p></div></div></footer>
-<script>
-// n8n: este archivo debe actualizarse agregando nuevos objetos al arreglo JSON.
-const CATEGORIES = ["Empresas","Gobierno","Economía","Tecnología","Mercados","Internacional","Ciencia","Análisis","Opinión"];
-
-function cardTemplate(article) {
-  return `<article class="card"><img src="${article.image}" alt="${article.title}"><div class="category">${article.category}</div><h3><a href="${article.url}">${article.title}</a></h3><p class="excerpt">${article.excerpt}</p><div class="meta">${article.date} · ${article.readTime}</div></article>`;
-}
-
-async function loadHome() {
-  const res = await fetch('articles.json');
-  const articles = await res.json();
-  const sorted = [...articles].sort((a,b) => new Date(b.date) - new Date(a.date));
-
-  // Últimas noticias en home: toma las más recientes de todas las categorías.
-  document.getElementById('latest-news').innerHTML = sorted.slice(0, 9).map(cardTemplate).join('');
-
-  const wrap = document.getElementById('category-sections');
-  // Filtro por categoría: 3 noticias más recientes por categoría oficial.
-  wrap.innerHTML = CATEGORIES.map(category => {
-    const items = sorted.filter(a => a.category === category).slice(0, 3);
-    if (!items.length) return '';
-    return `<section><div class="section-title"><h2>${category}</h2></div><div class="grid">${items.map(cardTemplate).join('')}</div></section>`;
-  }).join('');
-}
-
-loadHome();
-</script></body></html>
+<nav><ul class="nav-menu"><li><a href="index.html" class="">Inicio</a></li><li><a href="economia.html" class="">Economía</a></li><li><a href="empresas.html" class="">Empresas</a></li><li><a href="gobierno.html" class="">Gobierno</a></li><li><a href="tecnologia.html" class="">Tecnología</a></li><li><a href="mercados.html" class="">Mercados</a></li><li><a href="internacional.html" class="">Internacional</a></li><li><a href="ciencia.html" class="">Ciencia</a></li><li><a href="analisis.html" class="">Análisis</a></li><li><a href="opinion.html" class="">Opinión</a></li></ul></nav>
+<main class="container article-layout"><a class="back-link" href="../opinion.html">← Volver a Opinión</a><div class="category">Opinión</div><h1 class="article-title">Opinión: información confiable para decidir</h1><div class="meta">2025-05-18 · 5 min read · Por The Borinquen Post</div><img src="../assets/images/default.jpg" alt="Opinión: información confiable para decidir" style="margin:20px 0;border:1px solid var(--gris-borde)"><article class="article-body"><p>La calidad informativa se vuelve ventaja estratégica empresarial.</p><p>Este contenido sirve como demostración de cómo n8n puede generar automáticamente nuevos artículos HTML dentro de <code>/articles/</code> y mantener actualizado el home.</p><p>Para publicar, el flujo de n8n debe crear el archivo con este formato y luego actualizar <code>articles.json</code> con un nuevo objeto del mismo esquema.</p></article><section><div class="section-title"><h2>Relacionados</h2></div><div id="related" class="grid"></div></section></main>
+<script>const CURRENT={"title": "Opinión: información confiable para decidir", "slug": "opinion-informacion-confiable-para-decidir", "date": "2025-05-18", "category": "Opinión", "author": "The Borinquen Post", "excerpt": "La calidad informativa se vuelve ventaja estratégica empresarial.", "image": "assets/images/default.jpg", "url": "articles/opinion-informacion-confiable-para-decidir.html", "readTime": "5 min read"};async function loadRelated(){const res=await fetch('../articles.json');const articles=await res.json();const related=articles.filter(x=>x.category===CURRENT.category&&x.slug!==CURRENT.slug).sort((x,y)=>new Date(y.date)-new Date(x.date)).slice(0,3);document.getElementById('related').innerHTML=related.map(r=>`<article class="card"><img src="../${r.image}" alt="${r.title}"><div class="category">${r.category}</div><h3><a href="../${r.url}">${r.title}</a></h3><div class="meta">${r.date} · ${r.readTime}</div></article>`).join('');}loadRelated();</script></body></html>
