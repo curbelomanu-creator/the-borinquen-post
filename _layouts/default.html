@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
+  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+</head>
+<body>
+  {% include header.html %}
+  {% include nav.html %}
+  <main class="container">{{ content }}</main>
+  <footer>
+    <div class="footer-grid">
+      <div><h2>{{ site.title }}</h2><p>Información estratégica para líderes y empresas.</p></div>
+      <div><h3>Secciones</h3><a href="{{ '/economia/' | relative_url }}">Economía</a><a href="{{ '/empresas/' | relative_url }}">Empresas</a><a href="{{ '/gobierno/' | relative_url }}">Gobierno</a></div>
+      <div><h3>Publicación</h3><p>Edición digital con enfoque editorial profesional.</p></div>
+    </div>
+  </footer>
+</body>
+</html>
