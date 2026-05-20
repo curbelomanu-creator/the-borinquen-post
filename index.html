@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Borinquen Post | Información estratégica para líderes y empresas</title>
+
+  <style>
+    :root {
+      --azul-oscuro: #061a33;
+      --azul-principal: #0b2c55;
+      --azul-medio: #123f73;
+      --azul-claro: #eaf1f8;
+      --blanco: #ffffff;
+      --gris-texto: #4b5563;
+      --gris-borde: #d8dee8;
+      --dorado-suave: #b89b5e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Georgia, "Times New Roman", serif;
+      background: var(--blanco);
+      color: var(--azul-oscuro);
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    img {
+      width: 100%;
+      display: block;
+    }
+
+    /* TOP BAR */
+
+    .top-bar {
+      background: var(--azul-oscuro);
+      color: var(--blanco);
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      padding: 10px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .top-left,
+    .top-right {
+      display: flex;
+      gap: 22px;
+      align-items: center;
+    }
+
+    .top-right a {
+      color: var(--blanco);
+      opacity: 0.9;
+    }
+
+    .top-right a:hover {
+      opacity: 1;
+      color: var(--azul-claro);
+    }
+
+    /* HEADER */
+
+    header {
+      padding: 28px 5%;
+      border-bottom: 1px solid var(--gris-borde);
+      background: var(--blanco);
+    }
+
+    .brand-area {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .logo-box {
+      width: 120px;
+      height: 120px;
+      border: 3px solid var(--azul-principal);
+      background: var(--blanco);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .logo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .site-title {
+      font-size: 46px;
+      line-height: 0.95;
+      letter-spacing: 8px;
+      text-transform: uppercase;
+      color: var(--azul-oscuro);
+    }
+
+    .tagline {
+      border-left: 1px solid var(--gris-borde);
+      padding-left: 40px;
+      max-width: 430px;
+      font-size: 25px;
+      line-height: 1.25;
+      color: var(--azul-principal);
+    }
+
+    /* NAV */
+
+    nav {
+      padding: 0 5%;
+      border-bottom: 1px solid var(--gris-borde);
+      background: var(--blanco);
+    }
+
+    .nav-menu {
+      display: flex;
+      justify-content: center;
+      gap: 46px;
+      list-style: none;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .nav-menu li a {
+      display: block;
+      padding: 17px 0;
+      color: var(--azul-oscuro);
+      border-bottom: 3px solid transparent;
+    }
+
+    .nav-menu li a:hover,
+    .nav-menu li a.active {
+      border-bottom: 3px solid var(--azul-principal);
+      color: var(--azul-principal);
+    }
+
+    /* MAIN LAYOUT */
+
+    .container {
+      width: 90%;
+      max-width: 1400px;
+      margin: 34px auto;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 2.2fr 1fr;
+      gap: 28px;
+      margin-bottom: 32px;
+    }
+
+    .hero {
+      min-height: 380px;
+      background:
+        linear-gradient(
+          90deg,
+          rgba(255,255,255,0.98) 0%,
+          rgba(255,255,255,0.92) 38%,
+          rgba(255,255,255,0.25) 100%
+        ),
+        url("https://images.unsplash.com/photo-1605558165087-42a0ecde22fe?auto=format&fit=crop&w=1400&q=80");
+      background-size: cover;
+      background-position: center;
+      padding: 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border: 1px solid var(--gris-borde);
+    }
+
+    .hero h1 {
+      font-size: 56px;
+      line-height: 1.05;
+      margin-bottom: 24px;
+      max-width: 780px;
+      color: var(--azul-oscuro);
+    }
+
+    .hero p {
+      font-size: 22px;
+      max-width: 560px;
+      color: #26364a;
+      margin-bottom: 28px;
+    }
+
+    .btn {
+      display: inline-block;
+      width: fit-content;
+      background: var(--azul-oscuro);
+      color: var(--blanco);
+      padding: 14px 28px;
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: bold;
+      transition: 0.2s ease;
+    }
+
+    .btn:hover {
+      background: var(--azul-medio);
+      transform: translateY(-1px);
+    }
+
+    /* NEWSLETTER */
+
+    .newsletter {
+      border: 1px solid var(--gris-borde);
+      padding: 42px;
+      background: var(--blanco);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .newsletter-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--azul-oscuro);
+      color: var(--blanco);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      font-size: 20px;
+      margin-bottom: 24px;
+    }
+
+    .newsletter h2 {
+      font-size: 24px;
+      margin-bottom: 12px;
+      color: var(--azul-oscuro);
+    }
+
+    .newsletter p {
+      color: var(--gris-texto);
+      margin-bottom: 22px;
+      font-size: 16px;
+    }
+
+    .newsletter input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #b8c0cc;
+      margin-bottom: 12px;
+      font-size: 15px;
+    }
+
+    .newsletter button {
+      width: 100%;
+      padding: 15px;
+      background: var(--azul-oscuro);
+      color: var(--blanco);
+      border: none;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .newsletter button:hover {
+      background: var(--azul-medio);
+    }
+
+    .newsletter .old-editions {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 14px;
+      color: var(--azul-medio);
+      text-decoration: underline;
+    }
+
+    /* SECTION TITLES */
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin: 34px 0 18px;
+    }
+
+    .section-title h2 {
+      font-size: 21px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      white-space: nowrap;
+      color: var(--azul-oscuro);
+    }
+
+    .section-title::after {
+      content: "";
+      height: 1px;
+      background: var(--gris-borde);
+      flex: 1;
+    }
+
+    /* FEATURED */
+
+    .featured-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 34px;
+    }
+
+    .featured-card {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 18px;
+      border: 1px solid var(--gris-borde);
+      padding: 14px;
+      background: var(--blanco);
+      transition: 0.2s ease;
+    }
+
+    .featured-card:hover {
+      box-shadow: 0 10px 30px rgba(6, 26, 51, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .featured-card img {
+      height: 140px;
+      object-fit: cover;
+    }
+
+    .category {
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--azul-medio);
+      font-weight: bold;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .featured-card h3 {
+      font-size: 21px;
+      line-height: 1.25;
+      margin-bottom: 14px;
+      color: var(--azul-oscuro);
+    }
+
+    .meta {
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    /* RECENT + ANALYSIS */
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 34px;
+    }
+
+    .recent-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .article-card {
+      border-bottom: 1px solid var(--gris-borde);
+      padding-bottom: 22px;
+      transition: 0.2s ease;
+    }
+
+    .article-card:hover h3 {
+      color: var(--azul-medio);
+    }
+
+    .article-card img {
+      height: 210px;
+      object-fit: cover;
+      margin-bottom: 16px;
+    }
+
+    .article-card h3 {
+      font-size: 25px;
+      line-height: 1.2;
+      margin-bottom: 10px;
+      color: var(--azul-oscuro);
+    }
+
+    .article-card p {
+      color: var(--gris-texto);
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+
+    /* SIDEBAR */
+
+    .sidebar {
+      border: 1px solid var(--gris-borde);
+      padding: 26px;
+      height: fit-content;
+      background: #fbfdff;
+    }
+
+    .sidebar h2 {
+      font-size: 22px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 20px;
+    }
+
+    .analysis-item {
+      border-bottom: 1px solid var(--gris-borde);
+      padding: 18px 0;
+    }
+
+    .analysis-item:first-of-type {
+      padding-top: 0;
+    }
+
+    .analysis-item h3 {
+      font-size: 20px;
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+
+    .analysis-item h3:hover {
+      color: var(--azul-medio);
+    }
+
+    /* FOOTER */
+
+    footer {
+      background: var(--azul-oscuro);
+      color: var(--blanco);
+      margin-top: 60px;
+      padding: 46px 5%;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 34px;
+      max-width: 1400px;
+      margin: auto;
+    }
+
+    footer h2 {
+      font-size: 28px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    footer h3 {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 14px;
+      color: var(--azul-claro);
+    }
+
+    footer p,
+    footer a {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      color: #d7dfeb;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .copyright {
+      max-width: 1400px;
+      margin: 30px auto 0;
+      padding-top: 22px;
+      border-top: 1px solid rgba(255,255,255,0.18);
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      color: #cbd5e1;
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 1050px) {
+      .brand-area,
+      .hero-grid,
+      .content-grid {
+        grid-template-columns: 1fr;
+        display: block;
+      }
+
+      .tagline {
+        border-left: none;
+        padding-left: 0;
+        margin-top: 24px;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .featured-grid,
+      .recent-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-menu {
+        overflow-x: auto;
+        justify-content: flex-start;
+        gap: 28px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .top-bar {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .logo-area {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .logo-box {
+        width: 92px;
+        height: 92px;
+        font-size: 42px;
+      }
+
+      .site-title {
+        font-size: 34px;
+        letter-spacing: 5px;
+      }
+
+      .tagline {
+        font-size: 20px;
+      }
+
+      .hero {
+        padding: 34px 26px;
+      }
+
+      .hero h1 {
+        font-size: 38px;
+      }
+
+      .hero p {
+        font-size: 18px;
+      }
+
+      .featured-card {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="top-bar">
+    <div class="top-left">
+      <span>Martes, 20 de mayo de 2025</span>
+      <span>San Juan, PR</span>
+      <span>28°C</span>
+    </div>
+
+    <div class="top-right">
+      <a href="#">Newsletter</a>
+      <a href="#">Podcasts</a>
+      <a href="#">Eventos</a>
+      <a href="#">Sobre Nosotros</a>
+      <a href="#">Contacto</a>
+    </div>
+  </div>
+
+  <header>
+    <div class="brand-area">
+      <div class="logo-area">
+        <div class="logo-box">
+          <img src="The Borinquen Post.jpeg" alt="Logo de The Borinquen Post" />
+        </div>
+
+        <div class="site-title">
+          <div>The</div>
+          <div>Borinquen</div>
+          <div>Post</div>
+        </div>
+      </div>
+
+      <div class="tagline">
+        Información estratégica para líderes y empresas.
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <ul class="nav-menu">
+      <li><a href="#" class="active">Inicio</a></li>
+      <li><a href="#">Economía</a></li>
+      <li><a href="#">Empresas</a></li>
+      <li><a href="#">Finanzas</a></li>
+      <li><a href="#">Gobierno</a></li>
+      <li><a href="#">Tecnología</a></li>
+      <li><a href="#">Industrias</a></li>
+      <li><a href="#">Análisis</a></li>
+      <li><a href="#">Opinión</a></li>
+      <li><a href="#">Más</a></li>
+    </ul>
+  </nav>
+
+  <main class="container">
+
+    <section class="hero-grid">
+      <div class="hero">
+        <h1>Información estratégica para líderes y empresas.</h1>
+        <p>
+          Noticias, análisis y perspectivas de Puerto Rico para tomar mejores decisiones de negocio.
+        </p>
+        <a href="#" class="btn">Leer análisis</a>
+      </div>
+
+      <aside class="newsletter">
+        <div class="newsletter-icon">✉</div>
+        <h2>Newsletter The Borinquen Post</h2>
+        <p>
+          Recibe nuestro resumen diario con las noticias y análisis más relevantes para líderes y empresas.
+        </p>
+
+        <form>
+          <input type="email" placeholder="Tu correo electrónico" />
+          <button type="submit">Suscribirme</button>
+        </form>
+
+        <a href="#" class="old-editions">Ver ediciones anteriores</a>
+      </aside>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <h2>Destacado</h2>
+      </div>
+
+      <div class="featured-grid">
+
+        <article class="featured-card">
+          <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80" alt="Puerto Rico Gobierno" />
+          <div>
+            <div class="category">Economía</div>
+            <h3>Puerto Rico proyecta crecimiento moderado para 2025, según informe del BDE</h3>
+            <div class="meta">20 de mayo de 2025 · 5 min read</div>
+          </div>
+        </article>
+
+        <article class="featured-card">
+          <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80" alt="Empresas" />
+          <div>
+            <div class="category">Empresas</div>
+            <h3>México fortalece su presencia regional con nueva inversión en Puerto Rico</h3>
+            <div class="meta">20 de mayo de 2025 · 4 min read</div>
+          </div>
+        </article>
+
+        <article class="featured-card">
+          <img src="https://images.unsplash.com/photo-1494412519320-aa613dfb7738?auto=format&fit=crop&w=800&q=80" alt="Puerto de carga" />
+          <div>
+            <div class="category">Industrias</div>
+            <h3>Sector manufacturero mantiene impulso con aumento en exportaciones</h3>
+            <div class="meta">19 de mayo de 2025 · 4 min read</div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <section class="content-grid">
+
+      <div>
+        <div class="section-title">
+          <h2>Lo más reciente</h2>
+        </div>
+
+        <div class="recent-grid">
+
+          <article class="article-card">
+            <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80" alt="Puerto Rico" />
+            <div class="category">Gobierno</div>
+            <h3>Nuevas medidas buscan acelerar permisos para proyectos estratégicos</h3>
+            <p>
+              El gobierno evalúa nuevas herramientas para reducir tiempos de aprobación y estimular inversión privada.
+            </p>
+            <div class="meta">20 de mayo de 2025 · 6 min read</div>
+          </article>
+
+          <article class="article-card">
+            <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=900&q=80" alt="Real Estate" />
+            <div class="category">Finanzas</div>
+            <h3>Mercado inmobiliario mantiene alta demanda en zonas urbanas y turísticas</h3>
+            <p>
+              La escasez de inventario y el flujo de capital privado siguen marcando la dinámica del sector.
+            </p>
+            <div class="meta">20 de mayo de 2025 · 5 min read</div>
+          </article>
+
+          <article class="article-card">
+            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80" alt="Tecnología" />
+            <div class="category">Tecnología</div>
+            <h3>Empresas locales aceleran adopción de inteligencia artificial</h3>
+            <p>
+              Nuevas soluciones digitales comienzan a transformar operaciones, ventas y análisis financiero.
+            </p>
+            <div class="meta">19 de mayo de 2025 · 4 min read</div>
+          </article>
+
+          <article class="article-card">
+            <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=900&q=80" alt="Negocios" />
+            <div class="category">Empresas</div>
+            <h3>Ejecutivos apuestan por alianzas regionales para crecer en el Caribe</h3>
+            <p>
+              La integración comercial vuelve a ocupar un lugar central en la agenda empresarial.
+            </p>
+            <div class="meta">19 de mayo de 2025 · 4 min read</div>
+          </article>
+
+        </div>
+      </div>
+
+      <aside class="sidebar">
+        <h2>Análisis destacado</h2>
+
+        <article class="analysis-item">
+          <div class="category">Análisis</div>
+          <h3>Puerto Rico ante una nueva etapa de inversión privada</h3>
+          <div class="meta">Por Redacción · 7 min read</div>
+        </article>
+
+        <article class="analysis-item">
+          <div class="category">Opinión</div>
+          <h3>La importancia de información confiable para quienes toman decisiones</h3>
+          <div class="meta">Por The Borinquen Post · 5 min read</div>
+        </article>
+
+        <article class="analysis-item">
+          <div class="category">Economía</div>
+          <h3>Claves para entender el escenario económico de Puerto Rico en 2025</h3>
+          <div class="meta">Por Equipo Editorial · 6 min read</div>
+        </article>
+
+        <article class="analysis-item">
+          <div class="category">Industrias</div>
+          <h3>Manufactura, turismo y vivienda: los tres motores a observar</h3>
+          <div class="meta">Por Redacción · 5 min read</div>
+        </article>
+      </aside>
+
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <h2>The Borinquen Post</h2>
+        <p>
+          Información estratégica para líderes y empresas.
+        </p>
+        <p>
+          Medio digital enfocado en economía, empresas, gobierno, finanzas, industrias y análisis de Puerto Rico.
+        </p>
+      </div>
+
+      <div>
+        <h3>Secciones</h3>
+        <a href="#">Economía</a>
+        <a href="#">Empresas</a>
+        <a href="#">Finanzas</a>
+        <a href="#">Gobierno</a>
+        <a href="#">Análisis</a>
+      </div>
+
+      <div>
+        <h3>Contacto</h3>
+        <a href="#">Newsletter</a>
+        <a href="#">Eventos</a>
+        <a href="#">Publicidad</a>
+        <a href="#">Sobre Nosotros</a>
+      </div>
+    </div>
+
+    <div class="copyright">
+      © 2025 The Borinquen Post. Todos los derechos reservados.
+    </div>
+  </footer>
+
+</body>
+</html>
