@@ -1,0 +1,14 @@
+<nav>
+  <ul class="nav-menu">
+    <li><a href="{{ '/' | relative_url }}" class="{% if page.url == '/' %}active{% endif %}">Inicio</a></li>
+    <li><a href="{{ '/economia/' | relative_url }}" class="{% if page.url contains '/economia' %}active{% endif %}">Economía</a></li>
+    <li><a href="{{ '/empresas/' | relative_url }}" class="{% if page.url contains '/empresas' %}active{% endif %}">Empresas</a></li>
+    <li><a href="{{ '/gobierno/' | relative_url }}" class="{% if page.url contains '/gobierno' %}active{% endif %}">Gobierno</a></li>
+    <li><a href="{{ '/tecnologia/' | relative_url }}" class="{% if page.url contains '/tecnologia' %}active{% endif %}">Tecnología</a></li>
+    <li><a href="{{ '/mercados/' | relative_url }}" class="{% if page.url contains '/mercados' %}active{% endif %}">Mercados</a></li>
+    <li><a href="{{ '/internacional/' | relative_url }}" class="{% if page.url contains '/internacional' %}active{% endif %}">Internacional</a></li>
+    <li><a href="{{ '/ciencia/' | relative_url }}" class="{% if page.url contains '/ciencia' %}active{% endif %}">Ciencia</a></li>
+    <li><a href="{{ '/analisis/' | relative_url }}" class="{% if page.url contains '/analisis' %}active{% endif %}">Análisis</a></li>
+    <li><a href="{{ '/opinion/' | relative_url }}" class="{% if page.url contains '/opinion' %}active{% endif %}">Opinión</a></li>
+  </ul>
+</nav>

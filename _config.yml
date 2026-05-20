@@ -1,0 +1,11 @@
+title: The Borinquen Post
+description: Noticias y análisis para Puerto Rico y el Caribe.
+url: ""
+baseurl: "/the-borinquen-post"
+language: es
+markdown: kramdown
+permalink: /:categories/:year/:month/:day/:title/
+timezone: America/Puerto_Rico
+collections:
+  posts:
+    output: true
