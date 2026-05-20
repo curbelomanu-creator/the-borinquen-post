@@ -2,49 +2,15 @@
 layout: default
 title: Inicio
 ---
-<section class="home-hero">
-  <div class="home-hero-content">
-    <h1>Información estratégica<br>para líderes y empresas.</h1>
-    <p>
-      Noticias, análisis y perspectivas de Puerto Rico<br>
-      para tomar mejores decisiones de negocio.
-    </p>
-    <a href="#ultimas-noticias" class="home-hero-button">Leer análisis</a>
-  </div>
-</section>
-
-<section id="ultimas-noticias" class="latest-news-section">
-  <div class="section-heading">
-    <h2>Últimas noticias</h2>
-  </div>
-
-  <div class="latest-news-grid">
-    {% for post in site.posts limit:6 %}
-    <article class="news-card">
-      {% if post.image %}
-      <a href="{{ post.url | relative_url }}">
-        <img src="{{ post.image | relative_url }}" alt="{{ post.title }}">
-      </a>
-      {% endif %}
-
-      {% if post.category %}
-      <span class="news-category">{{ post.category }}</span>
-      {% endif %}
-
-      <h3>
-        <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-      </h3>
-
-      {% if post.description %}
-      <p>{{ post.description }}</p>
-      {% else %}
-      <p>{{ post.excerpt | strip_html | truncate: 140 }}</p>
-      {% endif %}
-
-      <div class="news-date">{{ post.date | date: "%d %b %Y" }}</div>
-    </article>
-    {% else %}
-    <p class="no-news-message">No hay noticias publicadas todavía.</p>
-    {% endfor %}
-  </div>
-</section>
+<section class="section-title"><h2>Últimas noticias</h2></section>
+<div class="grid">
+  {% for post in site.posts limit: 9 %}
+  <article class="card">
+    {% if post.image %}<img src="{{ post.image | relative_url }}" alt="{{ post.title }}">{% endif %}
+    <div class="category">{{ post.category }}</div>
+    <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
+    {% if post.excerpt %}<p class="excerpt">{{ post.excerpt | strip_html | truncate: 160 }}</p>{% endif %}
+    <div class="meta">{{ post.date | date: '%d %b %Y' }}</div>
+  </article>
+  {% endfor %}
+</div>
