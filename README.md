@@ -40,3 +40,11 @@ bundle exec jekyll serve
 ## Nota
 
 Todos los links de navegación y CSS usan `relative_url` para compatibilidad con GitHub Pages.
+
+
+### Configuración para GitHub Pages de repositorio
+
+Este sitio usa `baseurl: "/the-borinquen-post"` en `_config.yml` para que CSS y enlaces funcionen cuando se publica como **Project Pages**.
+
+Si luego lo publicas en un dominio raíz (User/Org Pages o dominio personalizado), cambia `baseurl` a `""`.
+
