@@ -10,11 +10,30 @@
   {% include header.html %}
   {% include nav.html %}
   <main class="container">{{ content }}</main>
-  <footer>
+  <footer class="site-footer">
+    <div class="footer-top-line"></div>
     <div class="footer-grid">
-      <div><h2>{{ site.title }}</h2><p>Información estratégica para líderes y empresas.</p></div>
-      <div><h3>Secciones</h3><a href="{{ '/economia/' | relative_url }}">Economía</a><a href="{{ '/empresas/' | relative_url }}">Empresas</a><a href="{{ '/gobierno/' | relative_url }}">Gobierno</a></div>
-      <div><h3>Publicación</h3><p>Edición digital con enfoque editorial profesional.</p></div>
+      <section class="footer-brand">
+        <h2>{{ site.title }}</h2>
+        <p>Periodismo de negocios con enfoque analítico, cobertura institucional y criterios editoriales verificables.</p>
+      </section>
+      <section>
+        <h3>Secciones</h3>
+        <a href="{{ '/economia/' | relative_url }}">Economía</a>
+        <a href="{{ '/empresas/' | relative_url }}">Empresas</a>
+        <a href="{{ '/gobierno/' | relative_url }}">Gobierno</a>
+        <a href="{{ '/mercados/' | relative_url }}">Mercados</a>
+      </section>
+      <section>
+        <h3>Institucional</h3>
+        <p>Edición digital diaria</p>
+        <p>San Juan, Puerto Rico</p>
+        <p>contacto@borinquenpost.com</p>
+      </section>
+    </div>
+    <div class="footer-bottom">
+      <p>© {{ "now" | date: "%Y" }} {{ site.title }}. Todos los derechos reservados.</p>
+      <p>Política editorial · Términos de uso · Privacidad</p>
     </div>
   </footer>
 </body>

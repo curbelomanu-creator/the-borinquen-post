@@ -31,10 +31,15 @@ nav{padding:0 5%;border-bottom:1px solid var(--gris-borde)}
 .back-link{font-family:Arial,sans-serif;color:var(--azul-medio);font-weight:700;margin:18px 0;display:inline-block}
 .simple-page h1{font-size:38px;margin-bottom:12px}
 .simple-page p{font-size:18px;color:#1f2f44}
-footer{margin-top:56px;background:var(--azul-oscuro);color:#d7dfeb;padding:42px 5%;font-family:Arial,sans-serif}
-.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:24px;max-width:1300px;margin:auto}
-footer h2{color:#fff;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
-footer h3{color:var(--azul-claro);text-transform:uppercase;font-size:13px;letter-spacing:1.4px;margin-bottom:12px}
-footer a,footer p{display:block;margin-bottom:8px}
-@media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}.footer-grid{grid-template-columns:1fr}}
+.site-footer{margin-top:56px;background:linear-gradient(180deg,#071a32 0%,#041224 100%);color:#c5d2e4;padding:0 5% 28px;font-family:Arial,sans-serif}
+.footer-top-line{height:3px;max-width:1300px;margin:0 auto 28px;background:linear-gradient(90deg,#3c6ea8 0%,#8caed3 45%,transparent 100%)}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:30px;max-width:1300px;margin:auto;padding-bottom:24px;border-bottom:1px solid rgba(197,210,228,.24)}
+.site-footer h2{color:#fff;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;font-size:22px}
+.site-footer h3{color:#e2ebf7;text-transform:uppercase;font-size:12px;letter-spacing:1.5px;margin-bottom:14px}
+.site-footer a,.site-footer p{display:block;margin-bottom:9px;font-size:14px;line-height:1.55}
+.site-footer a{transition:color .2s ease}
+.site-footer a:hover{color:#fff}
+.footer-brand p{max-width:56ch;color:#d4dfec}
+.footer-bottom{max-width:1300px;margin:16px auto 0;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:#9fb3cc;font-size:12px;letter-spacing:.2px}
+@media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}.footer-grid{grid-template-columns:1fr}.footer-bottom{flex-direction:column}}
 @media(max-width:700px){.top-bar{flex-direction:column;align-items:flex-start}.grid{grid-template-columns:1fr}.article-title{font-size:34px}.article-hero{height:260px}}
