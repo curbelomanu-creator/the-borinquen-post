@@ -1,15 +1,15 @@
 ---
 layout: default
-title: Opinion
-permalink: /opinion/
+title: Tribunales
+permalink: /tribunales/
 ---
 <section class="simple-page">
-  <h1>Opinion</h1>
-  <p>Cobertura editorial de la sección Opinion de The Borinquen Post.</p>
+  <h1>Tribunales</h1>
+  <p>Cobertura editorial de la sección Tribunales de The Borinquen Post.</p>
 </section>
 <section class="section-title"><h2>Artículos recientes</h2></section>
 <div class="grid">
-{% assign category_posts = site.posts | where_exp: "post", "post.categories contains 'opinion'" %}
+{% assign category_posts = site.posts | where_exp: "post", "post.categories contains 'tribunales'" %}
 {% for post in category_posts limit: 9 %}
   <article class="card">
     {% if post.image %}<img src="{{ post.image | relative_url }}" alt="{{ post.title }}">{% endif %}
