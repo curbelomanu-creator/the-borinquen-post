@@ -9,7 +9,7 @@ permalink: /mercados/
 </section>
 <section class="section-title"><h2>Artículos recientes</h2></section>
 <div class="grid">
-{% assign category_posts = site.posts | where_exp: "post", "post.categories contains 'mercados'" %}
+{% assign category_posts = site.posts | where_exp: "post", "post.category == 'mercados' or post.categories contains 'mercados'" %}
 {% for post in category_posts limit: 9 %}
   <article class="card">
     {% if post.image %}<img src="{{ post.image | relative_url }}" alt="{{ post.title }}">{% endif %}

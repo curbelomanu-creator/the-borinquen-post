@@ -1,0 +1,12 @@
+{
+  "name": "the-borinquen-post",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Automation utilities for The Borinquen Post",
+  "scripts": {
+    "publish-from-sheet": "node scripts/publish-from-sheet.js"
+  },
+  "dependencies": {
+    "googleapis": "^144.0.0"
+  }
+}
