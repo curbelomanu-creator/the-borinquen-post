@@ -4,13 +4,23 @@ const sharp = require("sharp");
 
 const BASE_IMAGE = path.join(process.cwd(), "assets", "images", "canva-de-imagenes.jpg");
 const OUTPUT_DIR = path.join(process.cwd(), "assets", "images", "generated");
+const CANVAS_SIZE = 2048;
+
+const CATEGORY_DISPLAY_LABELS = {
+  economia: "ECONOMÍA",
+  empresas: "EMPRESAS",
+  gobierno: "GOBIERNO",
+  internacional: "INTERNACIONAL",
+  mercados: "MERCADOS",
+  tribunales: "TRIBUNALES"
+};
 
 function escapeXml(text = "") {
   return String(text)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+    .replace(/\"/g, "&quot;");
 }
 
 function wrapText(text, maxCharsPerLine = 18, maxLines = 5) {
@@ -49,68 +59,72 @@ async function generateShareImage({ phrase, category, slug }) {
     fs.mkdirSync(OUTPUT_DIR, { recursive: true });
   }
 
-  const outputPath = path.join(OUTPUT_DIR, `${slug}.jpg`);
+  const outputPath = path.join(OUTPUT_DIR, `${slug}.png`);
   const lines = wrapText(phrase, 20, 5);
+  const categoryLabel = CATEGORY_DISPLAY_LABELS[category] || String(category || "").toUpperCase();
 
   const textSvg = `
-  <svg width="1024" height="1024" xmlns="http://www.w3.org/2000/svg">
+  <svg width="2048" height="2048" viewBox="0 0 2048 2048" xmlns="http://www.w3.org/2000/svg">
     <style>
       .quote {
         font-family: Georgia, 'Times New Roman', serif;
-        font-size: 82px;
+        font-size: 164px;
         font-weight: 600;
-        letter-spacing: 1px;
+        letter-spacing: 2px;
         fill: #F7FAFF;
       }
 
       .quote-accent {
         font-family: Georgia, 'Times New Roman', serif;
-        font-size: 82px;
+        font-size: 164px;
         font-weight: 600;
-        letter-spacing: 1px;
+        letter-spacing: 2px;
         fill: #78BDF2;
       }
 
       .category {
         font-family: Arial, Helvetica, sans-serif;
-        font-size: 31px;
+        font-size: 62px;
         font-weight: 700;
-        letter-spacing: 9px;
+        letter-spacing: 18px;
         fill: #78BDF2;
       }
 
       .line {
         stroke: #78BDF2;
-        stroke-width: 3;
+        stroke-width: 6;
         opacity: 0.85;
       }
 
       .mark {
         font-family: Georgia, 'Times New Roman', serif;
-        font-size: 125px;
+        font-size: 250px;
         font-weight: 700;
         fill: #78BDF2;
       }
     </style>
 
-    <text x="115" y="360" class="mark">“</text>
+    <text x="230" y="720" class="mark">“</text>
 
     ${lines
       .map((line, index) => {
-        const y = 455 + index * 92;
+        const y = 910 + index * 184;
         const cssClass = index >= lines.length - 1 ? "quote-accent" : "quote";
-        return `<text x="130" y="${y}" class="${cssClass}">${escapeXml(line)}</text>`;
+        return `<text x="260" y="${y}" class="${cssClass}">${escapeXml(line)}</text>`;
       })
       .join("")}
 
-    <line x1="130" y1="830" x2="390" y2="830" class="line" />
+    <line x1="260" y1="1660" x2="780" y2="1660" class="line" />
 
-    <text x="130" y="915" class="category">${escapeXml(category.toUpperCase())}</text>
+    <text x="260" y="1830" class="category">${escapeXml(categoryLabel)}</text>
   </svg>
   `;
 
   await sharp(BASE_IMAGE)
-    .resize(1024, 1024)
+    .resize(CANVAS_SIZE, CANVAS_SIZE, {
+      fit: "cover",
+      kernel: sharp.kernel.lanczos3
+    })
     .composite([
       {
         input: Buffer.from(textSvg),
@@ -118,10 +132,11 @@ async function generateShareImage({ phrase, category, slug }) {
         left: 0
       }
     ])
-    .jpeg({ quality: 92 })
+    .sharpen({ sigma: 0.8, m1: 0.8, m2: 1.4, x1: 2, y2: 10, y3: 20 })
+    .png({ compressionLevel: 9, adaptiveFiltering: false, palette: false })
     .toFile(outputPath);
 
-  return `/assets/images/generated/${slug}.jpg`;
+  return `/assets/images/generated/${slug}.png`;
 }
 
 module.exports = { generateShareImage };
