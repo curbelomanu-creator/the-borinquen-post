@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const { google } = require('googleapis');
+const { generateShareImage } = require('./generate-share-image');
 
 const CATEGORY_MAP = {
   economia: 'economia',
@@ -61,7 +62,6 @@ function getTodayISO() {
 }
 
 const BYLINE_PREFIX = "Redacción por The Borinquen Post.";
-const VALID_IMAGE_URL = /^https?:\/\//i;
 
 function makeDescription(body) {
   const clean = body.replace(/\s+/g, ' ').trim();
@@ -88,10 +88,6 @@ ${rest}` : bylineHtml;
   return body;
 }
 
-function normalizeImage(imageRaw) {
-  const image = (imageRaw || '').trim();
-  return VALID_IMAGE_URL.test(image) ? image : '';
-}
 
 async function main() {
   const sheetId = process.env.GOOGLE_SHEET_ID;
@@ -126,7 +122,7 @@ async function main() {
 
   for (let i = 0; i < dataRows.length; i += 1) {
     const row = dataRows[i];
-    const [titleRaw, bodyRaw, categoryRaw, sourceRaw, seoTitleRaw, seoDescriptionRaw, slugRaw, dateRaw, imageRaw, authorRaw] = row;
+    const [titleRaw, bodyRaw, categoryRaw, sourceRaw, seoTitleRaw, seoDescriptionRaw, slugRaw, dateRaw, fraseImagenRaw, authorRaw] = row;
 
     const title = (titleRaw || '').trim();
     const body = normalizeBody(bodyRaw);
@@ -160,7 +156,18 @@ async function main() {
     const description = (seoDescriptionRaw || '').trim() || makeDescription(body);
     const author = (authorRaw || '').trim() || 'The Borinquen Post';
     const source = (sourceRaw || '').trim();
-    const image = normalizeImage(imageRaw);
+    const fraseImagen = (fraseImagenRaw || '').trim() || title;
+
+    let image = '/assets/images/default.jpg';
+    try {
+      image = await generateShareImage({
+        phrase: fraseImagen,
+        category: normalizedCategory,
+        slug
+      });
+    } catch (error) {
+      console.warn(`⚠️ No se pudo generar imagen para ${slug}: ${error.message}`);
+    }
 
     const lines = [
       '---',
@@ -172,7 +179,7 @@ async function main() {
       `author: "${yamlEscape(author)}"`,
       `category: "${normalizedCategory}"`,
       `categories: ["${normalizedCategory}"]`,
-      ...(image ? [`image: "${yamlEscape(image)}"`] : []),
+      `image: "${yamlEscape(image)}"`,
       `sources: "${yamlEscape(source)}"`,
       `slug: "${yamlEscape(slug)}"`,
       '---',
