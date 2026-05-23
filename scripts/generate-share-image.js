@@ -132,7 +132,8 @@ async function generateShareImage({ phrase, category, slug }) {
 
   const instagramOutputPath = path.join(OUTPUT_DIR, `${slug}.png`);
   const webOutputPath = path.join(OUTPUT_DIR, `${slug}-web.png`);
-  const lines = wrapText(phrase, 20, 5);
+  const instagramLines = wrapText(phrase, 20, 5);
+  const webLines = wrapText(phrase, 30, 3);
   const categoryLabel = CATEGORY_DISPLAY_LABELS[category] || String(category || "").toUpperCase();
 
   await renderImage({
@@ -140,7 +141,7 @@ async function generateShareImage({ phrase, category, slug }) {
     outputPath: instagramOutputPath,
     width: 2048,
     height: 2048,
-    lines,
+    lines: instagramLines,
     categoryLabel,
     overlayOptions: {
       quoteFontSize: 164,
@@ -164,12 +165,12 @@ async function generateShareImage({ phrase, category, slug }) {
     outputPath: webOutputPath,
     width: 2400,
     height: 1260,
-    lines,
+    lines: webLines,
     categoryLabel,
     overlayOptions: {
       quoteFontSize: 132,
       quoteLineHeight: 148,
-      quoteX: 210,
+      quoteX: 200,
       quoteY: 560,
       markX: 170,
       markY: 410,
@@ -177,7 +178,7 @@ async function generateShareImage({ phrase, category, slug }) {
       categoryX: 210,
       categoryY: 1110,
       ruleX1: 210,
-      ruleX2: 760,
+      ruleX2: 860,
       ruleY: 980,
       categoryLetterSpacing: 14
     }
