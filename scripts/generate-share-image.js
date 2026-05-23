@@ -2,8 +2,8 @@ const fs = require("fs");
 const path = require("path");
 const sharp = require("sharp");
 
-const BASE_IMAGE = path.join(process.cwd(), "assets", "canva-de-imagenes.jpg");
-const OUTPUT_DIR = path.join(process.cwd(), "assets", "generated");
+const BASE_IMAGE = path.join(process.cwd(), "assets", "images", "canva-de-imagenes.jpg");
+const OUTPUT_DIR = path.join(process.cwd(), "assets", "images", "generated");
 
 function escapeXml(text = "") {
   return String(text)
@@ -121,7 +121,7 @@ async function generateShareImage({ phrase, category, slug }) {
     .jpeg({ quality: 92 })
     .toFile(outputPath);
 
-  return `assets/generated/${slug}.jpg`;
+  return `/assets/images/generated/${slug}.jpg`;
 }
 
 module.exports = { generateShareImage };
