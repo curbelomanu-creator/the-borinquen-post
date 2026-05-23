@@ -6,7 +6,7 @@
   <title>{% if page.seo_title %}{{ page.seo_title }} | {% elsif page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
   <meta name="description" content="{% if page.description %}{{ page.description | strip_html | strip_newlines | escape }}{% elsif page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 | escape }}{% endif %}">
   {% assign default_image = "/assets/images/default.jpg" | relative_url %}
-  {% assign page_image_raw = page.image | default: page.featured_image | default: page.thumbnail | default: page.cover | default: page.og_image %}
+  {% assign page_image_raw = page.web_image | default: page.image | default: page.featured_image | default: page.thumbnail | default: page.cover | default: page.og_image %}
   {% if page_image_raw %}
     {% if page_image_raw contains 'http://' or page_image_raw contains 'https://' %}
       {% assign page_image = page_image_raw %}

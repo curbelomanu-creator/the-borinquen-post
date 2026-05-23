@@ -17,7 +17,7 @@ title: Inicio
 <div class="grid">
   {% for post in site.posts limit: 9 %}
   <article class="card">
-    <img src="{{ post.image | default: post.featured_image | default: post.thumbnail | default: post.cover | default: fallback_image | relative_url }}" alt="{{ post.title }}" onerror="this.onerror=null;this.src='{{ fallback_image }}';">
+    <img src="{{ post.web_image | default: post.image | default: post.featured_image | default: post.thumbnail | default: post.cover | default: fallback_image | relative_url }}" alt="{{ post.title }}" onerror="this.onerror=null;this.src='{{ fallback_image }}';">
     <div class="category">{{ post.category }}</div>
     <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
     {% if post.excerpt %}<p class="excerpt">{{ post.excerpt | strip_html | truncate: 160 }}</p>{% endif %}
