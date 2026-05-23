@@ -88,6 +88,45 @@ ${rest}` : bylineHtml;
   return body;
 }
 
+function readSiteBaseUrl() {
+  const fallbackBaseUrl = 'https://curbelomanu-creator.github.io/the-borinquen-post';
+  const configPath = path.join(process.cwd(), '_config.yml');
+
+  if (!fs.existsSync(configPath)) return fallbackBaseUrl;
+
+  const raw = fs.readFileSync(configPath, 'utf8');
+  const lines = raw.split(/\r?\n/);
+
+  let url = '';
+  let baseurl = '';
+
+  for (const line of lines) {
+    const match = line.match(/^([a-zA-Z0-9_]+):\s*(.*)$/);
+    if (!match) continue;
+    const key = match[1];
+    const value = match[2].trim().replace(/^['"]|['"]$/g, '');
+    if (key === 'url') url = value;
+    if (key === 'baseurl') baseurl = value;
+  }
+
+  if (url) {
+    const normalizedUrl = url.replace(/\/+$/, '');
+    const normalizedBase = baseurl ? `/${baseurl.replace(/^\/+|\/+$/g, '')}` : '';
+    return `${normalizedUrl}${normalizedBase}`;
+  }
+
+  if (baseurl) {
+    return `https://curbelomanu-creator.github.io${baseurl.startsWith('/') ? '' : '/'}${baseurl}`;
+  }
+
+  return fallbackBaseUrl;
+}
+
+function buildPublicImageUrl(baseUrl, slug) {
+  const normalizedBase = baseUrl.replace(/\/+$/, '');
+  return `${normalizedBase}/assets/images/generated/${slug}.jpg`;
+}
+
 
 async function main() {
   const sheetId = process.env.GOOGLE_SHEET_ID;
@@ -100,17 +139,18 @@ async function main() {
   const credentials = JSON.parse(serviceAccountJson);
   const auth = new google.auth.GoogleAuth({
     credentials,
-    scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly']
+    scopes: ['https://www.googleapis.com/auth/spreadsheets']
   });
 
   const sheets = google.sheets({ version: 'v4', auth });
   const response = await sheets.spreadsheets.values.get({
     spreadsheetId: sheetId,
-    range: `${sheetName}!A:J`
+    range: `${sheetName}!A:K`
   });
 
   const rows = response.data.values || [];
   const dataRows = rows.slice(1);
+  const siteBaseUrl = readSiteBaseUrl();
 
   const postsDir = path.join(process.cwd(), '_posts');
   if (!fs.existsSync(postsDir)) fs.mkdirSync(postsDir, { recursive: true });
@@ -123,6 +163,7 @@ async function main() {
   for (let i = 0; i < dataRows.length; i += 1) {
     const row = dataRows[i];
     const [titleRaw, bodyRaw, categoryRaw, sourceRaw, seoTitleRaw, seoDescriptionRaw, slugRaw, dateRaw, fraseImagenRaw, authorRaw] = row;
+    const sheetRowNumber = i + 2;
 
     const title = (titleRaw || '').trim();
     const body = normalizeBody(bodyRaw);
@@ -159,12 +200,14 @@ async function main() {
     const fraseImagen = (fraseImagenRaw || '').trim() || title;
 
     let image = '/assets/images/default.jpg';
+    let imageGenerated = false;
     try {
       image = await generateShareImage({
         phrase: fraseImagen,
         category: normalizedCategory,
         slug
       });
+      imageGenerated = true;
     } catch (error) {
       console.warn(`⚠️ No se pudo generar imagen para ${slug}: ${error.message}`);
     }
@@ -191,6 +234,19 @@ async function main() {
     fs.writeFileSync(filepath, lines.join('\n'));
     createdCount += 1;
     console.log(`✅ Creado: _posts/${filename}`);
+
+    if (imageGenerated) {
+      const imagePublicUrl = buildPublicImageUrl(siteBaseUrl, slug);
+      await sheets.spreadsheets.values.update({
+        spreadsheetId: sheetId,
+        range: `${sheetName}!K${sheetRowNumber}`,
+        valueInputOption: 'RAW',
+        requestBody: {
+          values: [[imagePublicUrl]]
+        }
+      });
+      console.log(`📝 Imagen publicada registrada en ${sheetName}!K${sheetRowNumber}`);
+    }
   }
 
   console.log('');
