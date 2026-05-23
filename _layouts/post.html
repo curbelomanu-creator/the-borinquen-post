@@ -7,7 +7,7 @@ layout: default
   <h1 class="article-title">{{ page.title }}</h1>
   <div class="meta">{{ page.date | date: '%d de %B de %Y' }}{% if page.author %} · {{ page.author }}{% endif %}</div>
   {% if page.description %}<p class="excerpt">{{ page.description }}</p>{% endif %}
-  <img class="article-hero" src="{{ page.image | default: page.featured_image | default: page.thumbnail | default: page.cover | default: page.og_image | default: fallback_image }}" alt="{{ page.title }}" onerror="this.onerror=null;this.src='{{ fallback_image }}';">
+  <img class="article-hero" src="{{ page.image | default: page.featured_image | default: page.thumbnail | default: page.cover | default: page.og_image | default: fallback_image | relative_url }}" alt="{{ page.title }}" onerror="this.onerror=null;this.src='{{ fallback_image }}';">
   <div class="article-body">{{ content }}</div>
   <a class="back-link" href="{{ '/' | relative_url }}">← Volver a portada</a>
 </article>
