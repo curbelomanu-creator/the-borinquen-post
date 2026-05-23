@@ -14,13 +14,13 @@ footer{margin-top:56px;background:var(--azul-oscuro);color:#d7dfeb;padding:42px 
 // n8n: debe guardar image en articles.json (http(s) o assets/images/archivo.jpg).
 
 function resolveImagePath(imagePath, fromArticlesDir = false) {
-  const fallback = fromArticlesDir ? 'https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=1200&q=80' : 'https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=1200&q=80';
+  const fallback = fromArticlesDir ? '../assets/images/default.jpg' : '/assets/images/default.jpg';
   if (!imagePath || typeof imagePath !== 'string') return fallback;
   if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) return imagePath;
-  if (fromArticlesDir) return imagePath.startsWith('../') ? imagePath : `../${imagePath}`;
+  if (fromArticlesDir) return imagePath.startsWith('../') ? imagePath : `..${imagePath.startsWith('/') ? '' : '/'}${imagePath}`;
   return imagePath;
 }
-function onImageError(img, fromArticlesDir = false){img.onerror=null;img.src = fromArticlesDir ? 'https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=1200&q=80' : 'https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=1200&q=80';}
+function onImageError(img, fromArticlesDir = false){img.onerror=null;img.src = fromArticlesDir ? '../assets/images/default.jpg' : '/assets/images/default.jpg';}
 
 const CURRENT={{CURRENT_JSON}};
 const cover = resolveImagePath(CURRENT.image,true);document.querySelector('.article-hero').src=cover;

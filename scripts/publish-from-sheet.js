@@ -199,7 +199,8 @@ async function main() {
     const source = (sourceRaw || '').trim();
     const fraseImagen = (fraseImagenRaw || '').trim() || title;
 
-    let image = '/assets/images/default.jpg';
+    const fallbackImage = '/assets/images/default.jpg';
+    let image = fallbackImage;
     let imageGenerated = false;
     try {
       image = await generateShareImage({
@@ -223,6 +224,10 @@ async function main() {
       `category: "${normalizedCategory}"`,
       `categories: ["${normalizedCategory}"]`,
       `image: "${yamlEscape(image)}"`,
+      `featured_image: "${yamlEscape(image)}"`,
+      `thumbnail: "${yamlEscape(image)}"`,
+      `cover: "${yamlEscape(image)}"`,
+      `og_image: "${yamlEscape(image)}"`,
       `sources: "${yamlEscape(source)}"`,
       `slug: "${yamlEscape(slug)}"`,
       '---',

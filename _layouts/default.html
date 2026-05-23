@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% if page.seo_title %}{{ page.seo_title }} | {% elsif page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
   <meta name="description" content="{% if page.description %}{{ page.description | strip_html | strip_newlines | escape }}{% elsif page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 | escape }}{% endif %}">
+  {% assign default_image = "/assets/images/default.jpg" | relative_url %}
+  {% assign page_image = page.image | default: page.featured_image | default: page.thumbnail | default: page.cover | default: page.og_image | default: default_image %}
+  {% assign page_image_absolute = page_image %}
+  {% unless page_image_absolute contains 'http://' or page_image_absolute contains 'https://' %}
+    {% assign page_image_absolute = page_image_absolute | absolute_url %}
+  {% endunless %}
+  <meta property="og:image" content="{{ page_image_absolute }}">
+  <meta name="twitter:image" content="{{ page_image_absolute }}">
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
 </head>
 <body>
