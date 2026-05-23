@@ -124,7 +124,7 @@ function readSiteBaseUrl() {
 
 function buildPublicImageUrl(baseUrl, slug) {
   const normalizedBase = baseUrl.replace(/\/+$/, '');
-  return `${normalizedBase}/assets/images/generated/${slug}.jpg`;
+  return `${normalizedBase}/assets/images/generated/${slug}.png`;
 }
 
 
@@ -228,6 +228,7 @@ async function main() {
       `thumbnail: "${yamlEscape(image)}"`,
       `cover: "${yamlEscape(image)}"`,
       `og_image: "${yamlEscape(image)}"`,
+      `twitter:image: "${yamlEscape(image)}"`,
       `sources: "${yamlEscape(source)}"`,
       `slug: "${yamlEscape(slug)}"`,
       '---',
