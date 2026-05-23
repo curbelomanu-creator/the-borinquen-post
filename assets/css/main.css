@@ -35,6 +35,9 @@ nav{padding:0 5%;border-bottom:1px solid var(--gris-borde)}
 .article-title{font-size:46px;line-height:1.1;margin-bottom:16px}
 .article-hero{width:100%;height:420px;object-fit:cover;border:1px solid var(--gris-borde);margin:20px 0;background:#f3f6fa}
 .article-body p{margin-bottom:18px;font-size:20px;color:#1f2f44}
+.article-body .article-byline-note{margin-bottom:14px;font-size:15px;color:#6b7280;line-height:1.45}
+.article-body .article-byline-note em{font-style:italic}
+.card img,.article-hero{font-size:0}
 .back-link{font-family:Arial,sans-serif;color:var(--azul-medio);font-weight:700;margin:18px 0;display:inline-block}
 .simple-page h1{font-size:38px;margin-bottom:12px}
 .simple-page p{font-size:18px;color:#1f2f44}

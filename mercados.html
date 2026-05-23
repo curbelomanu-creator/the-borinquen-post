@@ -3,6 +3,7 @@ layout: default
 title: Mercados
 permalink: /mercados/
 ---
+{% assign fallback_image = "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80" %}
 <section class="simple-page">
   <h1>Mercados</h1>
   <p>Cobertura editorial de la sección Mercados de The Borinquen Post.</p>
@@ -12,7 +13,7 @@ permalink: /mercados/
 {% assign category_posts = site.categories.mercados %}
 {% for post in category_posts limit: 9 %}
   <article class="card">
-    {% if post.image %}<img src="{{ post.image | relative_url }}" alt="{{ post.title }}">{% endif %}
+    <img src="{{ post.image | default: fallback_image }}" alt="{{ post.title }}" onerror="this.onerror=null;this.src='{{ fallback_image }}';">
     <div class="category">{{ post.category }}</div>
     <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
     <p class="excerpt">{{ post.excerpt | strip_html | truncate: 150 }}</p>

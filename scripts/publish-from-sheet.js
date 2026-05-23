@@ -60,6 +60,9 @@ function getTodayISO() {
   return new Date().toISOString().slice(0, 10);
 }
 
+const BYLINE_PREFIX = "Redacción por The Borinquen Post.";
+const VALID_IMAGE_URL = /^https?:\/\//i;
+
 function makeDescription(body) {
   const clean = body.replace(/\s+/g, ' ').trim();
   if (clean.length <= 160) return clean;
@@ -68,6 +71,26 @@ function makeDescription(body) {
 
 function yamlEscape(value) {
   return String(value || '').replace(/"/g, '\\"');
+}
+
+function normalizeBody(bodyRaw) {
+  const body = (bodyRaw || '').trim();
+  if (!body) return body;
+
+  if (body.startsWith(BYLINE_PREFIX)) {
+    const rest = body.slice(BYLINE_PREFIX.length).trimStart();
+    const bylineHtml = '<p class="article-byline-note"><em>Redacción por The Borinquen Post.</em></p>';
+    return rest ? `${bylineHtml}
+
+${rest}` : bylineHtml;
+  }
+
+  return body;
+}
+
+function normalizeImage(imageRaw) {
+  const image = (imageRaw || '').trim();
+  return VALID_IMAGE_URL.test(image) ? image : '';
 }
 
 async function main() {
@@ -106,7 +129,7 @@ async function main() {
     const [titleRaw, bodyRaw, categoryRaw, sourceRaw, seoTitleRaw, seoDescriptionRaw, slugRaw, dateRaw, imageRaw, authorRaw] = row;
 
     const title = (titleRaw || '').trim();
-    const body = (bodyRaw || '').trim();
+    const body = normalizeBody(bodyRaw);
     const slug = (slugRaw || '').trim();
 
     if (!title || !body || !categoryRaw || !slug) {
@@ -137,7 +160,7 @@ async function main() {
     const description = (seoDescriptionRaw || '').trim() || makeDescription(body);
     const author = (authorRaw || '').trim() || 'The Borinquen Post';
     const source = (sourceRaw || '').trim();
-    const image = (imageRaw || '').trim();
+    const image = normalizeImage(imageRaw);
 
     const lines = [
       '---',
@@ -150,7 +173,7 @@ async function main() {
       `category: "${normalizedCategory}"`,
       `categories: ["${normalizedCategory}"]`,
       ...(image ? [`image: "${yamlEscape(image)}"`] : []),
-      `source: "${yamlEscape(source)}"`,
+      `sources: "${yamlEscape(source)}"`,
       `slug: "${yamlEscape(slug)}"`,
       '---',
       '',

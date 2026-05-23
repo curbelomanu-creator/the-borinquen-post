@@ -1,20 +1,13 @@
 ---
 layout: default
 ---
+{% assign fallback_image = "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80" %}
 <article class="article-layout">
   <div class="category">{{ page.category }}</div>
   <h1 class="article-title">{{ page.title }}</h1>
   <div class="meta">{{ page.date | date: '%d de %B de %Y' }}{% if page.author %} · {{ page.author }}{% endif %}</div>
   {% if page.description %}<p class="excerpt">{{ page.description }}</p>{% endif %}
-  {% if page.image %}
-  <img class="article-hero" src="{{ page.image | relative_url }}" alt="{{ page.title }}">
-  {% endif %}
+  <img class="article-hero" src="{{ page.image | default: fallback_image }}" alt="{{ page.title }}" onerror="this.onerror=null;this.src='{{ fallback_image }}';">
   <div class="article-body">{{ content }}</div>
-  {% if page.source and page.source != '' %}
-  <section>
-    <h3>Fuentes consultadas</h3>
-    <p>{{ page.source }}</p>
-  </section>
-  {% endif %}
   <a class="back-link" href="{{ '/' | relative_url }}">← Volver a portada</a>
 </article>
