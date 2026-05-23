@@ -37,6 +37,6 @@ function onImageError(img, fromArticlesDir = false){
 }
 
 const CURRENT={{CURRENT_JSON}};
-const cover = resolveImagePath(CURRENT.image,true);document.querySelector('.article-hero').src=cover;
-async function loadRelated(){const res=await fetch('../articles.json');const articles=await res.json();const related=articles.filter(a=>a.category===CURRENT.category&&a.slug!==CURRENT.slug).sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,3);document.getElementById('related').innerHTML=related.map(a=>`<article class="card"><img src="${resolveImagePath(a.image,true)}" alt="${a.title}" onerror="onImageError(this,true)"><div class="category">${a.category}</div><h3><a href="../${a.url}">${a.title}</a></h3><div class="meta">${a.date} · ${a.readTime}</div></article>`).join('');}
+const cover = resolveImagePath(CURRENT.web_image || CURRENT.image,true);document.querySelector('.article-hero').src=cover;
+async function loadRelated(){const res=await fetch('../articles.json');const articles=await res.json();const related=articles.filter(a=>a.category===CURRENT.category&&a.slug!==CURRENT.slug).sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,3);document.getElementById('related').innerHTML=related.map(a=>`<article class="card"><img src="${resolveImagePath(a.web_image || a.image,true)}" alt="${a.title}" onerror="onImageError(this,true)"><div class="category">${a.category}</div><h3><a href="../${a.url}">${a.title}</a></h3><div class="meta">${a.date} · ${a.readTime}</div></article>`).join('');}
 loadRelated();</script></body></html>

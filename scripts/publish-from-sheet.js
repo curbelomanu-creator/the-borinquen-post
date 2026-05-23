@@ -200,14 +200,17 @@ async function main() {
     const fraseImagen = (fraseImagenRaw || '').trim() || title;
 
     const fallbackImage = '/assets/images/default.jpg';
-    let image = fallbackImage;
+    let instagramImage = fallbackImage;
+    let webImage = fallbackImage;
     let imageGenerated = false;
     try {
-      image = await generateShareImage({
+      const generatedImages = await generateShareImage({
         phrase: fraseImagen,
         category: normalizedCategory,
         slug
       });
+      instagramImage = generatedImages.instagramImage || fallbackImage;
+      webImage = generatedImages.webImage || fallbackImage;
       imageGenerated = true;
     } catch (error) {
       console.warn(`⚠️ No se pudo generar imagen para ${slug}: ${error.message}`);
@@ -223,12 +226,14 @@ async function main() {
       `author: "${yamlEscape(author)}"`,
       `category: "${normalizedCategory}"`,
       `categories: ["${normalizedCategory}"]`,
-      `image: "${yamlEscape(image)}"`,
-      `featured_image: "${yamlEscape(image)}"`,
-      `thumbnail: "${yamlEscape(image)}"`,
-      `cover: "${yamlEscape(image)}"`,
-      `og_image: "${yamlEscape(image)}"`,
-      `twitter:image: "${yamlEscape(image)}"`,
+      `image: "${yamlEscape(webImage)}"`,
+      `web_image: "${yamlEscape(webImage)}"`,
+      `instagram_image: "${yamlEscape(instagramImage)}"`,
+      `featured_image: "${yamlEscape(webImage)}"`,
+      `thumbnail: "${yamlEscape(webImage)}"`,
+      `cover: "${yamlEscape(webImage)}"`,
+      `og_image: "${yamlEscape(instagramImage)}"`,
+      `twitter:image: "${yamlEscape(instagramImage)}"`,
       `sources: "${yamlEscape(source)}"`,
       `slug: "${yamlEscape(slug)}"`,
       '---',
