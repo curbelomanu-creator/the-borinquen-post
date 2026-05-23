@@ -28,12 +28,12 @@ jobs:
         env:
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
           GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
-          GOOGLE_SHEET_NAME: ${{ secrets.GOOGLE_SHEET_NAME || 'Hoja 1' }}
+          GOOGLE_SHEET_NAME: ${{ secrets.GOOGLE_SHEET_NAME }}
         run: npm run publish-from-sheet
 
       - name: Commit and push if there are new posts
         run: |
-          if git diff --quiet -- _posts; then
+          if [ -z "$(git status --porcelain _posts)" ]; then
             echo "No new posts generated."
             exit 0
           fi
