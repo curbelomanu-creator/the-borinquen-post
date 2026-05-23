@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -31,15 +33,31 @@ jobs:
           GOOGLE_SHEET_NAME: ${{ secrets.GOOGLE_SHEET_NAME }}
         run: npm run publish-from-sheet
 
-      - name: Commit and push if there are new posts
+      - name: Commit and push if there are generated changes
         run: |
-          if [ -z "$(git status --porcelain _posts assets/images/generated)" ]; then
-            echo "No new posts or images generated."
+          changed_files="$(git status --porcelain)"
+
+          generated_changes="$(printf '%s\n' "$changed_files" | awk '{print $2}' | grep -E '^(_posts/|assets/images/generated/|articles\.json$|categories/|category/|static/|_pages/)' || true)"
+
+          if [ -z "$generated_changes" ]; then
+            echo "No generated content changes to commit."
             exit 0
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add _posts assets/images/generated
+
+          git add _posts assets/images/generated articles.json
+
+          printf '%s\n' "$generated_changes" | grep -E '^(categories/|category/|static/|_pages/)' | while read -r file; do
+            [ -n "$file" ] && git add "$file"
+          done
+
+          if git diff --cached --quiet; then
+            echo "No staged generated changes after filtering."
+            exit 0
+          fi
+
           git commit -m "chore: publish posts from Google Sheet"
+          git pull --rebase origin main
           git push
