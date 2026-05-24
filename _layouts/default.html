@@ -47,40 +47,45 @@
     </div>
   </section>
   <main class="container">{{ content }}</main>
-  <footer class="site-footer">
-    <div class="footer-top-line"></div>
-    <div class="footer-grid">
-      <section class="footer-brand">
-        <img class="footer-brand-logo" src="{{ '/assets/images/logo-blanco.png' | relative_url }}" alt="The Borinquen Post">
-        <p>Noticias y análisis para Puerto Rico. Información estratégica para líderes, empresas y quienes toman decisiones.</p>
+  <footer class="footer">
+    <div class="footer-inner">
+      <section class="footer-column footer-brand">
+        <img src="{{ '/assets/images/logo-blanco.png' | relative_url }}" alt="The Borinquen Post" class="footer-logo">
+        <p class="footer-description">Noticias y análisis sobre Puerto Rico. Información estratégica para líderes, empresas y quienes toman decisiones.</p>
       </section>
-      <section>
-        <h3>Secciones</h3>
-        <a href="{{ '/economia/' | relative_url }}">Economía</a>
-        <a href="{{ '/empresas/' | relative_url }}">Empresas</a>
-        <a href="{{ '/gobierno/' | relative_url }}">Gobierno</a>
-        <a href="{{ '/tribunales/' | relative_url }}">Tribunales</a>
-        <a href="{{ '/mercados/' | relative_url }}">Mercados</a>
-        <a href="{{ '/internacional/' | relative_url }}">Internacional</a>
+      <section class="footer-column">
+        <h3 class="footer-title">Secciones</h3>
+        <nav class="footer-links" aria-label="Secciones del sitio">
+          <a href="{{ '/economia/' | relative_url }}">Economía</a>
+          <a href="{{ '/empresas/' | relative_url }}">Empresas</a>
+          <a href="{{ '/gobierno/' | relative_url }}">Gobierno</a>
+          <a href="{{ '/tribunales/' | relative_url }}">Tribunales</a>
+          <a href="{{ '/mercados/' | relative_url }}">Mercados</a>
+          <a href="{{ '/internacional/' | relative_url }}">Internacional</a>
+        </nav>
       </section>
-      <section>
-        <h3>Institucional</h3>
-        <p>Edición digital diaria</p>
-        <p>San Juan, Puerto Rico</p>
-        <p>theborinquenpost@gmail.com</p>
-        <div class="footer-social" aria-label="Redes sociales">
-          <a href="https://www.instagram.com/theborinquenpost/?hl=es" target="_blank" rel="noopener noreferrer" aria-label="Instagram de The Borinquen Post">
+      <section class="footer-column">
+        <h3 class="footer-title">Institucional</h3>
+        <div class="footer-meta">
+          <p>Edición digital diaria</p>
+          <p>San Juan, Puerto Rico</p>
+          <p>theborinquenpost@gmail.com</p>
+        </div>
+      </section>
+      <section class="footer-column">
+        <h3 class="footer-title">Síguenos</h3>
+        <div class="footer-socials" aria-label="Redes sociales">
+          <a class="footer-social-link" href="https://www.instagram.com/theborinquenpost/?hl=es" target="_blank" rel="noopener noreferrer" aria-label="Instagram de The Borinquen Post">
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7.25 2h9.5A5.26 5.26 0 0 1 22 7.25v9.5A5.26 5.26 0 0 1 16.75 22h-9.5A5.26 5.26 0 0 1 2 16.75v-9.5A5.26 5.26 0 0 1 7.25 2Zm0 2.2A3.05 3.05 0 0 0 4.2 7.25v9.5a3.05 3.05 0 0 0 3.05 3.05h9.5a3.05 3.05 0 0 0 3.05-3.05v-9.5a3.05 3.05 0 0 0-3.05-3.05h-9.5Zm10.3 1.55a1.25 1.25 0 1 1-1.25 1.25 1.25 1.25 0 0 1 1.25-1.25ZM12 7a5 5 0 1 1-5 5 5 5 0 0 1 5-5Zm0 2.2A2.8 2.8 0 1 0 14.8 12 2.8 2.8 0 0 0 12 9.2Z"/></svg>
           </a>
-          <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook de The Borinquen Post (pendiente)">
+          <a class="footer-social-link" href="https://www.facebook.com/people/The-Borinquen-Post/61590611930524/" target="_blank" rel="noopener noreferrer" aria-label="Facebook de The Borinquen Post">
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13.5 21v-7h2.3l.35-2.73H13.5V9.55c0-.79.22-1.33 1.35-1.33h1.44V5.78a19.7 19.7 0 0 0-2.1-.11c-2.08 0-3.5 1.27-3.5 3.6v2h-2.35V14h2.35v7h2.8Z"/></svg>
           </a>
         </div>
       </section>
     </div>
     <div class="footer-bottom">
-      <p>© {{ "now" | date: "%Y" }} {{ site.title }}. Todos los derechos reservados.</p>
-      <p>Política editorial · Términos de uso · Privacidad</p>
+      <p>© 2026 The Borinquen Post. Todos los derechos reservados.</p>
     </div>
   </footer>
   <script>
