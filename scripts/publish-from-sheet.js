@@ -89,7 +89,7 @@ ${rest}` : bylineHtml;
 }
 
 function readSiteBaseUrl() {
-  const fallbackBaseUrl = 'https://curbelomanu-creator.github.io/the-borinquen-post';
+  const fallbackBaseUrl = 'https://theborinquenpost.com';
   const configPath = path.join(process.cwd(), '_config.yml');
 
   if (!fs.existsSync(configPath)) return fallbackBaseUrl;
