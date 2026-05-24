@@ -1,7 +1,7 @@
 title: The Borinquen Post
 description: Noticias y análisis para Puerto Rico y el Caribe.
 url: ""
-baseurl: "/the-borinquen-post"
+baseurl: ""
 language: es
 markdown: kramdown
 permalink: /:categories/:year/:month/:day/:title/
