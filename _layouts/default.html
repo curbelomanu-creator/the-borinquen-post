@@ -30,12 +30,15 @@
 <body>
   {% include header.html %}
   {% include nav.html %}
+  <section class="search-results" id="search-results" hidden aria-live="polite">
+    <div class="search-results-inner" id="search-results-list"></div>
+  </section>
   <main class="container">{{ content }}</main>
   <footer class="site-footer">
     <div class="footer-top-line"></div>
     <div class="footer-grid">
       <section class="footer-brand">
-        <h2 class="footer-brand-title">{{ site.title }}</h2>
+        <img class="footer-brand-logo" src="{{ '/assets/images/logo-blanco.png' | relative_url }}" alt="The Borinquen Post">
         <p>Noticias y análisis para Puerto Rico. Información estratégica para líderes, empresas y quienes toman decisiones.</p>
       </section>
       <section>
@@ -52,6 +55,14 @@
         <p>Edición digital diaria</p>
         <p>San Juan, Puerto Rico</p>
         <p>theborinquenpost@gmail.com</p>
+        <div class="footer-social" aria-label="Redes sociales">
+          <a href="https://www.instagram.com/theborinquenpost/?hl=es" target="_blank" rel="noopener noreferrer" aria-label="Instagram de The Borinquen Post">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7.25 2h9.5A5.26 5.26 0 0 1 22 7.25v9.5A5.26 5.26 0 0 1 16.75 22h-9.5A5.26 5.26 0 0 1 2 16.75v-9.5A5.26 5.26 0 0 1 7.25 2Zm0 2.2A3.05 3.05 0 0 0 4.2 7.25v9.5a3.05 3.05 0 0 0 3.05 3.05h9.5a3.05 3.05 0 0 0 3.05-3.05v-9.5a3.05 3.05 0 0 0-3.05-3.05h-9.5Zm10.3 1.55a1.25 1.25 0 1 1-1.25 1.25 1.25 1.25 0 0 1 1.25-1.25ZM12 7a5 5 0 1 1-5 5 5 5 0 0 1 5-5Zm0 2.2A2.8 2.8 0 1 0 14.8 12 2.8 2.8 0 0 0 12 9.2Z"/></svg>
+          </a>
+          <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook de The Borinquen Post (pendiente)">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13.5 21v-7h2.3l.35-2.73H13.5V9.55c0-.79.22-1.33 1.35-1.33h1.44V5.78a19.7 19.7 0 0 0-2.1-.11c-2.08 0-3.5 1.27-3.5 3.6v2h-2.35V14h2.35v7h2.8Z"/></svg>
+          </a>
+        </div>
       </section>
     </div>
     <div class="footer-bottom">
@@ -87,6 +98,92 @@
           .catch(function () {
             tempElement.textContent = "82°F";
           });
+      }
+
+      const searchToggle = document.querySelector(".search-toggle");
+      const searchRoot = document.querySelector("[data-search]");
+      const searchInput = document.getElementById("news-search-input");
+      const searchResults = document.getElementById("search-results");
+      const searchResultsList = document.getElementById("search-results-list");
+      let newsIndex = [];
+
+      function renderResults(results, query) {
+        if (!searchResults || !searchResultsList) return;
+        searchResults.hidden = false;
+        if (!query.trim()) {
+          searchResults.hidden = true;
+          searchResultsList.innerHTML = "";
+          return;
+        }
+        if (!results.length) {
+          searchResultsList.innerHTML = "<p class=\"search-empty\">No se encontraron noticias.</p>";
+          return;
+        }
+        searchResultsList.innerHTML = results.slice(0, 8).map(function(item){
+          return '<article class="search-result-item"><a href="' + item.url + '"><span class="search-result-category">' + (item.category || "Noticias") + '</span><h3>' + item.title + '</h3><p>' + (item.excerpt || "") + '</p><span class="search-result-meta">' + (item.author || "Redacción") + '</span></a></article>';
+        }).join("");
+      }
+
+      function normalize(text) {
+        return (text || "").toString().toLowerCase();
+      }
+
+      function runSearch(query) {
+        const q = normalize(query).trim();
+        if (!q) {
+          renderResults([], "");
+          return;
+        }
+        const results = newsIndex.filter(function(item){
+          return normalize(item.title).includes(q) || normalize(item.category).includes(q) || normalize(item.author).includes(q) || normalize(item.excerpt).includes(q) || normalize(item.content).includes(q);
+        });
+        renderResults(results, query);
+      }
+
+      function buildIndexFromDom() {
+        return Array.from(document.querySelectorAll(".card")).map(function(card){
+          const link = card.querySelector("h3 a");
+          return {
+            title: link ? link.textContent.trim() : "",
+            url: link ? link.getAttribute("href") : "#",
+            category: (card.querySelector(".category") || {}).textContent || "",
+            author: (card.querySelector(".meta") || {}).textContent || "",
+            excerpt: (card.querySelector(".excerpt") || {}).textContent || "",
+            content: card.textContent || ""
+          };
+        }).filter(function(item){ return item.title && item.url; });
+      }
+
+      fetch("{{ '/articles.json' | relative_url }}")
+        .then(function(response){ return response.json(); })
+        .then(function(items){
+          newsIndex = (items || []).map(function(item){
+            return {
+              title: item.title || "",
+              url: item.url ? (item.url.startsWith("http") ? item.url : "{{ '/' | relative_url }}" + item.url.replace(/^\//, "")) : "#",
+              category: item.category || "",
+              author: item.author || "",
+              excerpt: item.excerpt || item.summary || "",
+              content: item.content || ""
+            };
+          });
+        })
+        .catch(function(){
+          newsIndex = buildIndexFromDom();
+        });
+
+      if (searchToggle && searchRoot && searchInput) {
+        searchToggle.addEventListener("click", function(){
+          const open = searchRoot.classList.toggle("is-open");
+          searchToggle.setAttribute("aria-expanded", open ? "true" : "false");
+          if (open) searchInput.focus();
+          if (!open) {
+            searchInput.value = "";
+            renderResults([], "");
+          }
+        });
+
+        searchInput.addEventListener("input", function(e){ runSearch(e.target.value); });
       }
     });
   </script>
