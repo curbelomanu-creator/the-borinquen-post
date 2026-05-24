@@ -45,6 +45,7 @@ nav{padding:0 5%;border-bottom:1px solid var(--gris-borde)}
 .footer-top-line{height:3px;max-width:1300px;margin:0 auto 28px;background:linear-gradient(90deg,#3c6ea8 0%,#8caed3 45%,transparent 100%)}
 .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:30px;max-width:1300px;margin:auto;padding-bottom:24px;border-bottom:1px solid rgba(197,210,228,.24)}
 .site-footer h2{color:#fff;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;font-size:22px}
+.site-footer .footer-brand-title{font-family:"Playfair Display",Georgia,"Times New Roman",serif;font-weight:700;letter-spacing:1.6px}
 .site-footer h3{color:#e2ebf7;text-transform:uppercase;font-size:12px;letter-spacing:1.5px;margin-bottom:14px}
 .site-footer a,.site-footer p{display:block;margin-bottom:9px;font-size:14px;line-height:1.55}
 .site-footer a{transition:color .2s ease}
@@ -53,5 +54,6 @@ nav{padding:0 5%;border-bottom:1px solid var(--gris-borde)}
 .footer-bottom{max-width:1300px;margin:16px auto 0;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:#9fb3cc;font-size:12px;letter-spacing:.2px}
 @media(max-width:1000px){.home-hero{min-height:330px;padding:46px 6%}.home-hero-content h1{font-size:44px}.home-hero-content p{font-size:20px}.grid{grid-template-columns:repeat(2,1fr)}.footer-grid{grid-template-columns:1fr}.footer-bottom{flex-direction:column}}
 @media(max-width:700px){.top-bar{flex-direction:column;align-items:flex-start}.home-hero{min-height:300px;padding:40px 8%}.home-hero-content h1{font-size:34px}.home-hero-content p{font-size:18px}.grid{grid-template-columns:1fr}.article-title{font-size:34px}.article-hero{height:260px}}
+@media(max-width:700px){.simple-page p{font-size:17px;line-height:1.75;margin-top:10px;max-width:65ch}}
 
 @media(max-width:768px){.article-hero,.card img{width:100%;max-width:100%;height:auto;object-fit:contain;object-position:center;overflow:visible}}
