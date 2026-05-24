@@ -9,14 +9,5 @@
       <li><a href="{{ '/mercados/' | relative_url }}" class="{% if page.url contains '/mercados' %}active{% endif %}">Mercados</a></li>
       <li><a href="{{ '/internacional/' | relative_url }}" class="{% if page.url contains '/internacional' %}active{% endif %}">Internacional</a></li>
     </ul>
-    <div class="nav-search" data-search>
-      <button class="search-toggle" type="button" aria-expanded="false" aria-controls="news-search-input" aria-label="Abrir buscador de noticias">
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10.5 3a7.5 7.5 0 1 1-4.727 13.32L2.5 19.593 4.407 21.5l3.273-3.273A7.5 7.5 0 0 1 10.5 3Zm0 2.2a5.3 5.3 0 1 0 0 10.6 5.3 5.3 0 0 0 0-10.6Z"/></svg>
-      </button>
-      <form class="search-form" id="news-search-form" role="search" aria-label="Buscar noticias">
-        <label class="visually-hidden" for="news-search-input">Buscar noticias</label>
-        <input id="news-search-input" type="search" name="q" placeholder="Buscar noticias…" autocomplete="off">
-      </form>
-    </div>
   </div>
 </nav>
