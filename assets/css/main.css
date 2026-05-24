@@ -14,32 +14,7 @@ nav{padding:0 5%;border-bottom:1px solid var(--gris-borde)}
 .nav-menu{display:flex;gap:32px;list-style:none;font-family:Arial,sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:1.2px;overflow-x:auto;padding-bottom:2px;flex:1}
 .nav-menu a{display:block;padding:14px 0;border-bottom:3px solid transparent}
 .nav-menu a.active,.nav-menu a:hover{border-bottom-color:var(--azul-principal);color:var(--azul-principal)}
-.brand-area{max-width:1300px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:18px}
-.search-toggle{border:1px solid #cfd9e6;background:#fff;color:var(--azul-principal);border-radius:999px;width:44px;height:44px;display:grid;place-items:center;cursor:pointer;transition:all .2s ease}
-.search-toggle:hover,.search-toggle:focus-visible{background:var(--azul-principal);color:#fff;border-color:var(--azul-principal);outline:none}
-.search-toggle svg{width:20px;height:20px;fill:currentColor}
-.search-overlay{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:3vh 4vw}
-.search-overlay-backdrop{position:absolute;inset:0;background:rgba(4,18,36,.56);backdrop-filter:blur(2px)}
-.search-overlay-panel{position:relative;z-index:1;width:min(980px,100%);max-height:94vh;background:#f8fbff;border:1px solid #cfd9e6;padding:20px;overflow:auto}
-.search-overlay-header{display:flex;justify-content:space-between;align-items:center;gap:16px;border-bottom:1px solid var(--gris-borde);padding-bottom:12px;margin-bottom:14px}
-.search-overlay-header h2{font-size:24px;letter-spacing:.5px}
-.search-close{border:1px solid #cfd9e6;background:#fff;color:var(--azul-principal);border-radius:999px;width:38px;height:38px;font-size:28px;line-height:1;cursor:pointer}
-.search-close:focus-visible{outline:2px solid var(--azul-principal);outline-offset:2px}
-.search-overlay-form input{width:100%;height:56px;border:1px solid #cfd9e6;padding:0 16px;font-size:22px;font-family:Georgia,"Times New Roman",serif;color:#20324a}
-.search-overlay-form input:focus-visible{outline:2px solid var(--azul-principal);outline-offset:2px}
-.search-result-link{display:grid;grid-template-columns:210px 1fr;gap:16px;padding:14px}
-.search-result-image{height:140px;object-fit:cover;background:#eef2f8}
-.search-result-content{display:flex;flex-direction:column}
-body.search-open{overflow:hidden}
-.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-.search-results{padding:8px 0 0}
-.search-results-inner{max-width:100%;margin:0 auto;display:grid;gap:14px}
-.search-result-item{background:#fff;border:1px solid var(--gris-borde);box-shadow:0 8px 20px rgba(6,26,51,.07);transition:transform .18s ease,box-shadow .18s ease}
-.search-result-item:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(6,26,51,.12)}
-.search-result-item h3{font-size:27px;line-height:1.18;color:var(--azul-oscuro)}
-.search-result-item p{font-size:16px;color:#4c5b6f;margin-top:6px}
-.search-result-category,.search-result-meta{font-family:Arial,sans-serif;font-size:11px;text-transform:uppercase;color:var(--azul-medio);letter-spacing:1px}.search-result-meta{display:block;margin-top:10px}
-.search-empty{font-family:Arial,sans-serif;color:#4c5b6f;background:#fff;border:1px solid var(--gris-borde);padding:16px}
+.brand-area{max-width:1300px;margin:0 auto;display:flex;align-items:center;justify-content:flex-start;gap:18px}
 .container{width:90%;max-width:1300px;margin:30px auto}
 .home-hero{position:relative;min-height:380px;border:1px solid var(--gris-borde);background-image:linear-gradient(120deg,rgba(255,255,255,.9) 0%,rgba(255,255,255,.82) 45%,rgba(255,255,255,.68) 100%),url("../images/portada-computadora.png");background-size:cover;background-position:center;display:flex;align-items:center;padding:56px 7%;margin-bottom:28px;width:100vw;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw)}
 .home-hero-content{max-width:700px}
@@ -87,7 +62,6 @@ body.search-open{overflow:hidden}
 
 @media(max-width:768px){.article-hero,.card img{width:100%;max-width:100%;height:auto;object-fit:contain;object-position:center;overflow:visible}}
 
-@media(max-width:768px){.search-overlay{padding:0}.search-overlay-panel{width:100%;height:100vh;max-height:100vh;padding:16px;border:none}.search-result-link{grid-template-columns:1fr}.search-result-image{height:180px}.search-result-item h3{font-size:24px}}
 
 @media(max-width:900px){.footer-inner{grid-template-columns:1fr 1fr}}
 @media(max-width:640px){.footer-inner{grid-template-columns:1fr;text-align:left}.footer-logo{max-width:220px}.footer-socials{justify-content:flex-start}}

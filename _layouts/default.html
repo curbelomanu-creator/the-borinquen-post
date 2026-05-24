@@ -30,22 +30,6 @@
 <body>
   {% include header.html %}
   {% include nav.html %}
-  <section class="search-overlay" id="news-search-overlay" hidden>
-    <div class="search-overlay-backdrop" data-search-close></div>
-    <div class="search-overlay-panel" role="dialog" aria-modal="true" aria-labelledby="search-overlay-title">
-      <div class="search-overlay-header">
-        <h2 id="search-overlay-title">Buscar noticias</h2>
-        <button class="search-close" type="button" id="search-close" aria-label="Cerrar buscador">×</button>
-      </div>
-      <form class="search-overlay-form" id="news-search-form" role="search" aria-label="Buscar noticias">
-        <label class="visually-hidden" for="news-search-input">Buscar noticias</label>
-        <input id="news-search-input" type="search" name="q" placeholder="Buscar noticias…" autocomplete="off">
-      </form>
-      <div class="search-results" id="search-results" aria-live="polite">
-        <div class="search-results-inner" id="search-results-list"></div>
-      </div>
-    </div>
-  </section>
   <main class="container">{{ content }}</main>
   <footer class="footer">
     <div class="footer-inner">
@@ -116,108 +100,6 @@
           .catch(function () {
             tempElement.textContent = "82°F";
           });
-      }
-
-      const searchToggle = document.getElementById("search-open");
-      const searchOverlay = document.getElementById("news-search-overlay");
-      const searchClose = document.getElementById("search-close");
-      const searchInput = document.getElementById("news-search-input");
-      const searchResults = document.getElementById("search-results");
-      const searchResultsList = document.getElementById("search-results-list");
-      let newsIndex = [];
-
-      function renderResults(results, query) {
-        if (!searchResults || !searchResultsList) return;
-        if (!query.trim()) {
-          searchResultsList.innerHTML = "<p class=\"search-empty\">Escribe para buscar noticias por título, categoría, autor o contenido.</p>";
-          return;
-        }
-        if (!results.length) {
-          searchResultsList.innerHTML = "<p class=\"search-empty\">No se encontraron noticias.</p>";
-          return;
-        }
-        searchResultsList.innerHTML = results.slice(0, 12).map(function(item){
-          return '<article class="search-result-item"><a class="search-result-link" href="' + item.url + '"><img class="search-result-image" src="' + (item.image || "{{ '/assets/images/default.jpg' | relative_url }}") + '" alt="' + item.title.replace(/"/g, '&quot;') + '" onerror="this.onerror=null;this.src=\'{{ '/assets/images/default.jpg' | relative_url }}\';"><div class="search-result-content"><span class="search-result-category">' + (item.category || "Noticias") + '</span><h3>' + item.title + '</h3><p>' + (item.excerpt || "") + '</p><span class="search-result-meta">' + (item.author || "Redacción") + ' · ' + (item.date || "") + '</span></div></a></article>';
-        }).join("");
-      }
-
-      function normalize(text) {
-        return (text || "").toString().toLowerCase();
-      }
-
-      function runSearch(query) {
-        const q = normalize(query).trim();
-        if (!q) {
-          renderResults([], "");
-          return;
-        }
-        const results = newsIndex.filter(function(item){
-          return normalize(item.title).includes(q) || normalize(item.category).includes(q) || normalize(item.author).includes(q) || normalize(item.excerpt).includes(q) || normalize(item.content).includes(q);
-        });
-        renderResults(results, query);
-      }
-
-      function buildIndexFromDom() {
-        return Array.from(document.querySelectorAll(".card")).map(function(card){
-          const link = card.querySelector("h3 a");
-          return {
-            title: link ? link.textContent.trim() : "",
-            url: link ? link.getAttribute("href") : "#",
-            category: (card.querySelector(".category") || {}).textContent || "",
-            author: (card.querySelector(".meta") || {}).textContent || "",
-            excerpt: (card.querySelector(".excerpt") || {}).textContent || "",
-            image: (card.querySelector("img") || {}).src || "",
-            date: (card.querySelector(".meta") || {}).textContent || "",
-            content: card.textContent || ""
-          };
-        }).filter(function(item){ return item.title && item.url; });
-      }
-
-      fetch("{{ '/articles.json' | relative_url }}")
-        .then(function(response){ return response.json(); })
-        .then(function(items){
-          newsIndex = (items || []).map(function(item){
-            return {
-              title: item.title || "",
-              url: item.url ? (item.url.startsWith("http") ? item.url : "{{ '/' | relative_url }}" + item.url.replace(/^\//, "")) : "#",
-              category: item.category || "",
-              author: item.author || "",
-              excerpt: item.excerpt || item.summary || "",
-              image: item.web_image || item.image || item.featured_image || item.thumbnail || item.cover || "",
-              date: item.date ? new Date(item.date).toLocaleDateString("es-PR", { day: "2-digit", month: "short", year: "numeric" }) : "",
-              content: item.content || ""
-            };
-          });
-        })
-        .catch(function(){
-          newsIndex = buildIndexFromDom();
-        });
-
-      function closeSearch() {
-        if (!searchOverlay) return;
-        searchOverlay.hidden = true;
-        document.body.classList.remove("search-open");
-        searchToggle.setAttribute("aria-expanded", "false");
-        searchInput.value = "";
-        renderResults([], "");
-      }
-
-      if (searchToggle && searchOverlay && searchInput) {
-        searchToggle.addEventListener("click", function(){
-          searchOverlay.hidden = false;
-          document.body.classList.add("search-open");
-          searchToggle.setAttribute("aria-expanded", "true");
-          renderResults([], "");
-          searchInput.focus();
-        });
-        searchClose.addEventListener("click", closeSearch);
-        searchOverlay.addEventListener("click", function(event){
-          if (event.target.hasAttribute("data-search-close")) closeSearch();
-        });
-        document.addEventListener("keydown", function(event){
-          if (event.key === "Escape" && !searchOverlay.hidden) closeSearch();
-        });
-        searchInput.addEventListener("input", function(e){ runSearch(e.target.value); });
       }
     });
   </script>
