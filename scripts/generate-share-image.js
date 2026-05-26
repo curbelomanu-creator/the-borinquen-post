@@ -23,8 +23,8 @@ function escapeXml(text = "") {
     .replace(/"/g, "&quot;");
 }
 
-function wrapText(text, maxCharsPerLine = 18, maxLines = 5) {
-  const words = String(text || "").trim().split(/\s+/);
+function wrapTextByChars(text, maxCharsPerLine = 18) {
+  const words = String(text || "").trim().split(/\s+/).filter(Boolean);
   const lines = [];
   let line = "";
 
@@ -37,16 +37,32 @@ function wrapText(text, maxCharsPerLine = 18, maxLines = 5) {
     } else {
       line = testLine;
     }
-
-    if (lines.length === maxLines) break;
   }
 
-  if (line && lines.length < maxLines) lines.push(line);
+  if (line) lines.push(line);
 
-  return lines.slice(0, maxLines);
+  return lines;
 }
 
-function buildOverlaySvg({ width, height, lines, categoryLabel, quoteFontSize, quoteLineHeight, quoteX, quoteY, markX, markY, markSize, categoryX, categoryY, ruleX1, ruleX2, ruleY, categoryLetterSpacing }) {
+function resolveHeadlineLayout(text, presets) {
+  for (const preset of presets) {
+    const lines = wrapTextByChars(text, preset.maxCharsPerLine);
+    if (lines.length <= preset.maxLines) {
+      return {
+        ...preset,
+        lines
+      };
+    }
+  }
+
+  const fallback = presets[presets.length - 1];
+  return {
+    ...fallback,
+    lines: wrapTextByChars(text, fallback.maxCharsPerLine)
+  };
+}
+
+function buildOverlaySvg({ width, height, lines, categoryLabel, quoteFontSize, quoteLineHeight, quoteX, quoteY, markX, markY, markSize, categoryX, categoryY, ruleX1, ruleX2, ruleY, categoryLetterSpacing, contentShiftY = 0 }) {
   return `
   <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
     <style>
@@ -88,10 +104,10 @@ function buildOverlaySvg({ width, height, lines, categoryLabel, quoteFontSize, q
       }
     </style>
 
-    <text x="${markX}" y="${markY}" class="mark">“</text>
+    <text x="${markX}" y="${markY + contentShiftY}" class="mark">“</text>
 
     ${lines.map((line, index) => {
-      const y = quoteY + index * quoteLineHeight;
+      const y = quoteY + contentShiftY + index * quoteLineHeight;
       const cssClass = index >= lines.length - 1 ? "quote-accent" : "quote";
       return `<text x="${quoteX}" y="${y}" class="${cssClass}">${escapeXml(line)}</text>`;
     }).join("")}
@@ -132,8 +148,20 @@ async function generateShareImage({ phrase, category, slug }) {
 
   const instagramOutputPath = path.join(OUTPUT_DIR, `${slug}.png`);
   const webOutputPath = path.join(OUTPUT_DIR, `${slug}-web.png`);
-  const instagramLines = wrapText(phrase, 20, 5);
-  const webLines = wrapText(phrase, 30, 3);
+  const instagramLayout = resolveHeadlineLayout(phrase, [
+    { maxCharsPerLine: 20, maxLines: 4, quoteFontSize: 164, quoteLineHeight: 184, contentShiftY: 0 },
+    { maxCharsPerLine: 22, maxLines: 4, quoteFontSize: 152, quoteLineHeight: 172, contentShiftY: -24 },
+    { maxCharsPerLine: 24, maxLines: 4, quoteFontSize: 140, quoteLineHeight: 160, contentShiftY: -42 },
+    { maxCharsPerLine: 26, maxLines: 4, quoteFontSize: 128, quoteLineHeight: 148, contentShiftY: -58 }
+  ]);
+
+  const webLayout = resolveHeadlineLayout(phrase, [
+    { maxCharsPerLine: 30, maxLines: 3, quoteFontSize: 132, quoteLineHeight: 148, contentShiftY: 0 },
+    { maxCharsPerLine: 34, maxLines: 3, quoteFontSize: 122, quoteLineHeight: 138, contentShiftY: -12 },
+    { maxCharsPerLine: 38, maxLines: 3, quoteFontSize: 112, quoteLineHeight: 128, contentShiftY: -22 },
+    { maxCharsPerLine: 42, maxLines: 4, quoteFontSize: 104, quoteLineHeight: 118, contentShiftY: -30 }
+  ]);
+
   const categoryLabel = CATEGORY_DISPLAY_LABELS[category] || String(category || "").toUpperCase();
 
   await renderImage({
@@ -141,11 +169,11 @@ async function generateShareImage({ phrase, category, slug }) {
     outputPath: instagramOutputPath,
     width: 2048,
     height: 2048,
-    lines: instagramLines,
+    lines: instagramLayout.lines,
     categoryLabel,
     overlayOptions: {
-      quoteFontSize: 164,
-      quoteLineHeight: 184,
+      quoteFontSize: instagramLayout.quoteFontSize,
+      quoteLineHeight: instagramLayout.quoteLineHeight,
       quoteX: 260,
       quoteY: 910,
       markX: 230,
@@ -156,7 +184,8 @@ async function generateShareImage({ phrase, category, slug }) {
       ruleX1: 260,
       ruleX2: 780,
       ruleY: 1660,
-      categoryLetterSpacing: 18
+      categoryLetterSpacing: 18,
+      contentShiftY: instagramLayout.contentShiftY
     }
   });
 
@@ -165,11 +194,11 @@ async function generateShareImage({ phrase, category, slug }) {
     outputPath: webOutputPath,
     width: 2400,
     height: 1260,
-    lines: webLines,
+    lines: webLayout.lines,
     categoryLabel,
     overlayOptions: {
-      quoteFontSize: 132,
-      quoteLineHeight: 148,
+      quoteFontSize: webLayout.quoteFontSize,
+      quoteLineHeight: webLayout.quoteLineHeight,
       quoteX: 200,
       quoteY: 560,
       markX: 170,
@@ -180,7 +209,8 @@ async function generateShareImage({ phrase, category, slug }) {
       ruleX1: 210,
       ruleX2: 860,
       ruleY: 980,
-      categoryLetterSpacing: 14
+      categoryLetterSpacing: 14,
+      contentShiftY: webLayout.contentShiftY
     }
   });
 
