@@ -122,9 +122,9 @@ function readSiteBaseUrl() {
   return fallbackBaseUrl;
 }
 
-function buildPublicImageUrl(baseUrl, slug) {
+function buildPublicImageUrl(baseUrl, filename) {
   const normalizedBase = baseUrl.replace(/\/+$/, '');
-  return `${normalizedBase}/assets/images/generated/${slug}.png`;
+  return `${normalizedBase}/assets/images/generated/${filename}`;
 }
 
 
@@ -145,7 +145,7 @@ async function main() {
   const sheets = google.sheets({ version: 'v4', auth });
   const response = await sheets.spreadsheets.values.get({
     spreadsheetId: sheetId,
-    range: `${sheetName}!A:K`
+    range: `${sheetName}!A:P`
   });
 
   const rows = response.data.values || [];
@@ -202,6 +202,7 @@ async function main() {
     const fallbackImage = '/assets/images/default.jpg';
     let instagramImage = fallbackImage;
     let webImage = fallbackImage;
+    let storyImage = fallbackImage;
     let imageGenerated = false;
     try {
       const generatedImages = await generateShareImage({
@@ -211,6 +212,7 @@ async function main() {
       });
       instagramImage = generatedImages.instagramImage || fallbackImage;
       webImage = generatedImages.webImage || fallbackImage;
+      storyImage = generatedImages.storyImage || fallbackImage;
       imageGenerated = true;
     } catch (error) {
       console.warn(`⚠️ No se pudo generar imagen para ${slug}: ${error.message}`);
@@ -229,6 +231,7 @@ async function main() {
       `image: "${yamlEscape(webImage)}"`,
       `web_image: "${yamlEscape(webImage)}"`,
       `instagram_image: "${yamlEscape(instagramImage)}"`,
+      `story_image: "${yamlEscape(storyImage)}"`,
       `featured_image: "${yamlEscape(webImage)}"`,
       `thumbnail: "${yamlEscape(webImage)}"`,
       `cover: "${yamlEscape(webImage)}"`,
@@ -247,16 +250,27 @@ async function main() {
     console.log(`✅ Creado: _posts/${filename}`);
 
     if (imageGenerated) {
-      const imagePublicUrl = buildPublicImageUrl(siteBaseUrl, slug);
-      await sheets.spreadsheets.values.update({
+      const imagePublicUrl = buildPublicImageUrl(siteBaseUrl, `${slug}.png`);
+      const storyPublicUrl = buildPublicImageUrl(siteBaseUrl, `${slug}-story.png`);
+
+      await sheets.spreadsheets.values.batchUpdate({
         spreadsheetId: sheetId,
-        range: `${sheetName}!K${sheetRowNumber}`,
-        valueInputOption: 'RAW',
         requestBody: {
-          values: [[imagePublicUrl]]
+          valueInputOption: 'RAW',
+          data: [
+            {
+              range: `${sheetName}!K${sheetRowNumber}`,
+              values: [[imagePublicUrl]]
+            },
+            {
+              range: `${sheetName}!P${sheetRowNumber}`,
+              values: [[storyPublicUrl]]
+            }
+          ]
         }
       });
       console.log(`📝 Imagen publicada registrada en ${sheetName}!K${sheetRowNumber}`);
+      console.log(`📝 Imagen Story publicada registrada en ${sheetName}!P${sheetRowNumber}`);
     }
   }
 

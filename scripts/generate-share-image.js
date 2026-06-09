@@ -4,6 +4,7 @@ const sharp = require("sharp");
 
 const INSTAGRAM_BASE_IMAGE = path.join(process.cwd(), "assets", "images", "canva-de-imagenes.jpg");
 const WEB_BASE_IMAGE = path.join(process.cwd(), "assets", "images", "canva-web.png");
+const STORY_BASE_IMAGE = path.join(process.cwd(), "assets", "images", "canva-story.png");
 const OUTPUT_DIR = path.join(process.cwd(), "assets", "images", "generated");
 
 const CATEGORY_DISPLAY_LABELS = {
@@ -148,6 +149,7 @@ async function generateShareImage({ phrase, category, slug }) {
 
   const instagramOutputPath = path.join(OUTPUT_DIR, `${slug}.png`);
   const webOutputPath = path.join(OUTPUT_DIR, `${slug}-web.png`);
+  const storyOutputPath = path.join(OUTPUT_DIR, `${slug}-story.png`);
   const instagramLayout = resolveHeadlineLayout(phrase, [
     { maxCharsPerLine: 20, maxLines: 4, quoteFontSize: 164, quoteLineHeight: 184, contentShiftY: 0 },
     { maxCharsPerLine: 22, maxLines: 4, quoteFontSize: 152, quoteLineHeight: 172, contentShiftY: -24 },
@@ -160,6 +162,13 @@ async function generateShareImage({ phrase, category, slug }) {
     { maxCharsPerLine: 34, maxLines: 3, quoteFontSize: 122, quoteLineHeight: 138, contentShiftY: -12 },
     { maxCharsPerLine: 38, maxLines: 3, quoteFontSize: 112, quoteLineHeight: 128, contentShiftY: -22 },
     { maxCharsPerLine: 42, maxLines: 4, quoteFontSize: 104, quoteLineHeight: 118, contentShiftY: -30 }
+  ]);
+
+  const storyLayout = resolveHeadlineLayout(phrase, [
+    { maxCharsPerLine: 18, maxLines: 5, quoteFontSize: 88, quoteLineHeight: 104, contentShiftY: 0 },
+    { maxCharsPerLine: 21, maxLines: 6, quoteFontSize: 78, quoteLineHeight: 92, contentShiftY: -20 },
+    { maxCharsPerLine: 24, maxLines: 7, quoteFontSize: 68, quoteLineHeight: 82, contentShiftY: -40 },
+    { maxCharsPerLine: 28, maxLines: 8, quoteFontSize: 58, quoteLineHeight: 72, contentShiftY: -55 }
   ]);
 
   const categoryLabel = CATEGORY_DISPLAY_LABELS[category] || String(category || "").toUpperCase();
@@ -214,9 +223,35 @@ async function generateShareImage({ phrase, category, slug }) {
     }
   });
 
+  await renderImage({
+    baseImage: STORY_BASE_IMAGE,
+    outputPath: storyOutputPath,
+    width: 1080,
+    height: 1920,
+    lines: storyLayout.lines,
+    categoryLabel,
+    overlayOptions: {
+      quoteFontSize: storyLayout.quoteFontSize,
+      quoteLineHeight: storyLayout.quoteLineHeight,
+      quoteX: 130,
+      quoteY: 760,
+      markX: 110,
+      markY: 590,
+      markSize: 150,
+      categoryX: 135,
+      categoryY: 1640,
+      ruleX1: 135,
+      ruleX2: 500,
+      ruleY: 1510,
+      categoryLetterSpacing: 8,
+      contentShiftY: storyLayout.contentShiftY
+    }
+  });
+
   return {
     instagramImage: `/assets/images/generated/${slug}.png`,
-    webImage: `/assets/images/generated/${slug}-web.png`
+    webImage: `/assets/images/generated/${slug}-web.png`,
+    storyImage: `/assets/images/generated/${slug}-story.png`
   };
 }
 
