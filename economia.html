@@ -11,7 +11,7 @@ permalink: /economia/
 <section class="section-title"><h2>Artículos recientes</h2></section>
 <div class="grid">
 {% assign category_posts = site.categories.economia %}
-{% for post in category_posts limit: 9 %}
+{% for post in category_posts %}
   <article class="card">
     <img src="{{ post.web_image | default: post.image | default: post.featured_image | default: post.thumbnail | default: post.cover | default: fallback_image | relative_url }}" alt="{{ post.title }}" onerror="this.onerror=null;this.src='{{ fallback_image }}';">
     <div class="category">{{ post.category }}</div>
