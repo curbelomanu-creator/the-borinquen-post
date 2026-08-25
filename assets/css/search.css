@@ -1,0 +1,37 @@
+.site-search-toggle{flex:0 0 auto;width:40px;height:40px;border:0;background:transparent;color:var(--azul-oscuro);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;border-radius:999px;transition:background .2s ease,transform .18s ease,color .2s ease}
+.site-search-toggle svg{width:21px;height:21px;fill:currentColor}
+.site-search-toggle:hover{background:var(--azul-claro);color:var(--azul-principal);transform:translateY(-1px)}
+.site-search-toggle:active{transform:scale(.94)}
+.site-search-toggle:focus-visible{outline:3px solid rgba(18,63,115,.25);outline-offset:2px}
+.site-search-panel{position:fixed;inset:0;z-index:9999;background:rgba(0,12,28,.55);backdrop-filter:blur(5px);padding:7vh 20px 30px;opacity:0;transition:opacity .18s ease}
+.site-search-panel.is-open{opacity:1}
+.site-search-dialog{width:min(860px,100%);max-height:82vh;margin:0 auto;background:#fff;border:1px solid var(--gris-borde);box-shadow:0 24px 70px rgba(0,10,30,.28);overflow:hidden;transform:translateY(-12px) scale(.985);transition:transform .2s ease;display:flex;flex-direction:column}
+.site-search-panel.is-open .site-search-dialog{transform:translateY(0) scale(1)}
+.site-search-head{display:flex;align-items:center;gap:12px;padding:16px;border-bottom:1px solid var(--gris-borde)}
+.site-search-input-wrap{flex:1;display:flex;align-items:center;gap:12px;border:1px solid #cfd7e2;background:#f8fafc;padding:0 14px;min-height:50px}
+.site-search-input-wrap svg{width:20px;height:20px;fill:var(--azul-medio);flex:0 0 auto}
+.site-search-input-wrap input{width:100%;border:0;outline:0;background:transparent;color:var(--azul-oscuro);font:16px Arial,sans-serif}
+.site-search-input-wrap input::placeholder{color:#7b8796}
+.site-search-close{width:44px;height:44px;border:0;background:transparent;color:var(--azul-oscuro);font:30px/1 Arial,sans-serif;cursor:pointer;border-radius:999px;transition:background .2s ease,transform .18s ease}
+.site-search-close:hover{background:var(--azul-claro);transform:rotate(4deg)}
+.site-search-results{overflow:auto;padding:8px 16px 18px}
+.search-empty{font:15px/1.5 Arial,sans-serif;color:#6b7280;padding:26px 8px}
+.search-result{display:grid;grid-template-columns:124px 1fr;gap:16px;padding:14px 8px;border-bottom:1px solid #e6ebf1;transition:background .18s ease,transform .18s ease}
+.search-result:hover{background:#f7f9fc;transform:translateX(2px)}
+.search-result img{width:124px;height:86px;object-fit:cover;background:#eef2f6}
+.search-result-copy{min-width:0}
+.search-result-meta{display:flex;gap:12px;align-items:center;font:700 10px/1.3 Arial,sans-serif;text-transform:uppercase;letter-spacing:.8px;color:var(--azul-medio);margin-bottom:5px}
+.search-result-meta span+span{font-weight:400;color:#7b8796}
+.search-result h3{font-size:20px;line-height:1.2;margin-bottom:5px}
+.search-result p{font-size:14px;line-height:1.45;color:var(--gris-texto);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+body.search-open{overflow:hidden}
+.related-section{margin:54px 0 28px;padding-top:8px;border-top:1px solid #edf0f4}
+.related-heading{margin-top:22px}
+.related-grid{grid-template-columns:repeat(3,1fr)}
+.related-card{cursor:pointer}
+.related-card h3{font-size:19px}
+.related-card .excerpt{font-size:14px}
+.related-empty{font:15px/1.6 Arial,sans-serif;color:#6b7280;padding:8px 0 18px}
+@media(max-width:900px){.related-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.site-search-toggle{width:36px;height:36px}.site-search-panel{padding:0;background:#fff}.site-search-dialog{width:100%;height:100%;max-height:none;border:0;box-shadow:none}.site-search-head{padding:12px}.site-search-input-wrap{min-height:48px}.site-search-results{padding:4px 12px 20px}.search-result{grid-template-columns:92px 1fr;gap:12px;padding:12px 4px}.search-result img{width:92px;height:72px}.search-result h3{font-size:17px}.search-result p{display:none}.related-grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.site-search-panel,.site-search-dialog,.site-search-toggle,.site-search-close,.search-result{transition:none!important}.site-search-dialog,.search-result:hover,.site-search-toggle:hover,.site-search-toggle:active{transform:none!important}}
