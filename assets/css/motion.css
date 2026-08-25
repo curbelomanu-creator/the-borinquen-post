@@ -1,0 +1,38 @@
+/* Motion layer for category and article pages */
+.simple-page{position:relative;padding:10px 0 4px;animation:pageIntro .58s cubic-bezier(.2,.7,.2,1) both}
+.simple-page h1{position:relative;display:inline-block}
+.simple-page h1::after{content:"";position:absolute;left:0;bottom:-6px;width:42px;height:3px;background:var(--azul-principal);transform-origin:left;animation:lineGrow .65s .16s cubic-bezier(.2,.7,.2,1) both}
+.simple-page p{animation:pageIntro .62s .08s cubic-bezier(.2,.7,.2,1) both}
+.simple-page + .section-title{animation:pageIntro .58s .14s cubic-bezier(.2,.7,.2,1) both}
+.grid .card{animation:cardIn .52s cubic-bezier(.2,.7,.2,1) both}
+.grid .card:nth-child(1){animation-delay:.08s}.grid .card:nth-child(2){animation-delay:.13s}.grid .card:nth-child(3){animation-delay:.18s}.grid .card:nth-child(4){animation-delay:.23s}.grid .card:nth-child(5){animation-delay:.28s}.grid .card:nth-child(6){animation-delay:.33s}
+.card:active{transform:translateY(-1px) scale(.99);box-shadow:0 5px 14px rgba(6,26,51,.1)}
+.card .category{transition:letter-spacing .2s ease,color .2s ease}
+.card:hover .category{letter-spacing:1.25px;color:var(--azul-principal)}
+
+.reading-progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:9999;background:transparent;pointer-events:none}
+.reading-progress-bar{display:block;width:0;height:100%;background:linear-gradient(90deg,var(--azul-medio),#2878c8);box-shadow:0 1px 6px rgba(18,63,115,.3);transition:width .08s linear}
+.article-layout{animation:articleShellIn .5s cubic-bezier(.2,.7,.2,1) both}
+.article-layout>.category{animation:articleElementIn .48s .04s both}
+.article-title{animation:articleElementIn .58s .08s cubic-bezier(.2,.7,.2,1) both}
+.article-layout>.meta{animation:articleElementIn .55s .13s both}
+.article-layout>.excerpt{animation:articleElementIn .55s .18s both}
+.article-hero{animation:articleImageIn .72s .2s cubic-bezier(.2,.7,.2,1) both;transition:transform .5s ease,box-shadow .5s ease}
+.article-hero:hover{transform:scale(1.006);box-shadow:0 16px 34px rgba(6,26,51,.09)}
+.article-body{animation:articleElementIn .62s .25s both}
+.article-body p{transition:color .2s ease}
+.article-body a{color:var(--azul-medio);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;transition:color .2s ease,text-underline-offset .2s ease}
+.article-body a:hover{color:#155a9c;text-underline-offset:5px}
+.back-link{display:inline-flex;align-items:center;gap:7px;padding:7px 0;transition:transform .2s ease,color .2s ease}
+.back-link:hover{transform:translateX(-4px);color:#155a9c}
+.back-link:active{transform:translateX(-2px) scale(.98)}
+
+@keyframes pageIntro{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes lineGrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes cardIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes articleShellIn{from{opacity:.5}to{opacity:1}}
+@keyframes articleElementIn{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:translateY(0)}}
+@keyframes articleImageIn{from{opacity:0;transform:scale(.985) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+
+@media(max-width:700px){.grid .card{animation-delay:.04s!important}.article-hero:hover{transform:none;box-shadow:none}}
+@media(prefers-reduced-motion:reduce){.simple-page,.simple-page p,.simple-page + .section-title,.grid .card,.article-layout,.article-layout>.category,.article-title,.article-layout>.meta,.article-layout>.excerpt,.article-hero,.article-body,.simple-page h1::after{animation:none!important}.reading-progress-bar{transition:none}.article-hero:hover,.back-link:hover,.card:active{transform:none}}
