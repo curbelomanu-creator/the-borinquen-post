@@ -10,6 +10,39 @@ layout: default
   {% if page.description %}<p class="excerpt">{{ page.description }}</p>{% endif %}
   <img class="article-hero" src="{{ page.web_image | default: page.image | default: page.featured_image | default: page.thumbnail | default: page.cover | default: page.og_image | default: fallback_image | relative_url }}" alt="{{ page.title }}" onerror="this.onerror=null;this.src='{{ fallback_image }}';">
   <div class="article-body">{{ content }}</div>
+
+  {% assign related_count = 0 %}
+  <section class="related-section" aria-labelledby="related-heading">
+    <div class="section-title related-heading"><h2 id="related-heading">También te puede interesar</h2></div>
+    <div class="grid related-grid">
+      {% for post in site.posts %}
+        {% if post.url != page.url and related_count < 3 %}
+          {% assign is_related = false %}
+          {% if post.category == page.category %}{% assign is_related = true %}{% endif %}
+          {% if page.tags and post.tags %}
+            {% for page_tag in page.tags %}
+              {% if post.tags contains page_tag %}{% assign is_related = true %}{% endif %}
+            {% endfor %}
+          {% endif %}
+          {% if is_related %}
+            {% assign related_image = post.web_image | default: post.image | default: post.featured_image | default: post.thumbnail | default: post.cover | default: fallback_image %}
+            <article class="card related-card">
+              <img src="{{ related_image | relative_url }}" alt="{{ post.title }}" onerror="this.onerror=null;this.src='{{ fallback_image }}';">
+              <div class="category">{{ post.category }}</div>
+              <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
+              {% if post.excerpt %}<p class="excerpt">{{ post.excerpt | strip_html | truncate: 130 }}</p>{% endif %}
+              <div class="meta">{{ post.date | date: '%d %b %Y' }}</div>
+            </article>
+            {% assign related_count = related_count | plus: 1 %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </div>
+    {% if related_count == 0 %}
+      <p class="related-empty">Próximamente encontrarás más noticias relacionadas con este tema.</p>
+    {% endif %}
+  </section>
+
   <a class="back-link" href="{{ '/' | relative_url }}">← Volver a portada</a>
 </article>
 <script>
