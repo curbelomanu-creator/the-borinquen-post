@@ -3,23 +3,35 @@ layout: default
 title: Inicio
 ---
 {% assign fallback_image = "/assets/images/default.jpg" %}
+{% assign sorted_posts = site.posts | sort: 'date' | reverse %}
+
 <section class="home-hero" id="home-hero">
   <div class="home-hero-content">
     <h1>Información estratégica<br>para líderes y empresas.</h1>
-    <p>
-      Noticias, análisis y perspectivas de Puerto Rico<br>
-      para tomar mejores decisiones de negocio.
-    </p>
-    <a href="#ultimas-noticias" class="home-hero-button" aria-label="Explorar últimas noticias">
-      <span>EXPLORAR</span><span class="home-hero-button-arrow" aria-hidden="true">→</span>
-    </a>
+    <p>Noticias, análisis y perspectivas de Puerto Rico<br>para tomar mejores decisiones de negocio.</p>
+    <a href="#destacado" class="home-hero-button" aria-label="Explorar noticias destacadas"><span>EXPLORAR</span><span class="home-hero-button-arrow" aria-hidden="true">→</span></a>
   </div>
 </section>
+
+{% if sorted_posts.size > 0 %}
+<section id="destacado" class="section-title"><h2>Destacado</h2></section>
+<div class="featured-news-grid">
+  {% for post in sorted_posts limit:3 %}
+  <article class="card featured-card {% if forloop.first %}featured-card-main{% endif %}" data-card-link="{{ post.url | relative_url }}" tabindex="0" role="link">
+    <img src="{{ post.web_image | default: post.image | default: post.featured_image | default: post.thumbnail | default: post.cover | default: fallback_image | relative_url }}" alt="{{ post.title }}" onerror="this.onerror=null;this.src='{{ fallback_image }}';">
+    <div class="category">{{ post.category }}</div>
+    <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
+    {% if post.excerpt %}<p class="excerpt">{{ post.excerpt | strip_html | truncate: 190 }}</p>{% endif %}
+    <div class="meta">{{ post.date | date: '%d %b %Y' }}</div>
+  </article>
+  {% endfor %}
+</div>
+{% endif %}
+
 <section id="ultimas-noticias" class="section-title"><h2>Últimas noticias</h2></section>
-{% assign sorted_posts = site.posts | sort: 'date' | reverse %}
-<div class="grid">
-  {% for post in sorted_posts %}
-  <article class="card">
+<div class="grid home-latest-grid" id="home-latest-grid">
+  {% for post in sorted_posts offset:3 %}
+  <article class="card home-latest-card{% if forloop.index > 9 %} home-latest-hidden{% endif %}" data-card-link="{{ post.url | relative_url }}" tabindex="0" role="link">
     <img src="{{ post.web_image | default: post.image | default: post.featured_image | default: post.thumbnail | default: post.cover | default: fallback_image | relative_url }}" alt="{{ post.title }}" onerror="this.onerror=null;this.src='{{ fallback_image }}';">
     <div class="category">{{ post.category }}</div>
     <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
@@ -28,40 +40,57 @@ title: Inicio
   </article>
   {% endfor %}
 </div>
+{% if sorted_posts.size > 12 %}
+<div class="home-more-wrap"><button class="home-more-button" id="home-more-button" type="button">VER MÁS NOTICIAS <span aria-hidden="true">↓</span></button></div>
+{% endif %}
+
+{% assign business_count = 0 %}
+<section class="section-title business-investment-title"><h2>Negocios e inversión</h2></section>
+<div class="grid business-investment-grid">
+  {% for post in sorted_posts %}
+    {% if business_count < 4 %}
+      {% assign cat = post.category | downcase %}
+      {% if cat == 'economía' or cat == 'economia' or cat == 'empresas' or cat == 'mercados' %}
+      <article class="card" data-card-link="{{ post.url | relative_url }}" tabindex="0" role="link">
+        <img src="{{ post.web_image | default: post.image | default: post.featured_image | default: post.thumbnail | default: post.cover | default: fallback_image | relative_url }}" alt="{{ post.title }}" onerror="this.onerror=null;this.src='{{ fallback_image }}';">
+        <div class="category">{{ post.category }}</div>
+        <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
+        {% if post.excerpt %}<p class="excerpt">{{ post.excerpt | strip_html | truncate: 150 }}</p>{% endif %}
+        <div class="meta">{{ post.date | date: '%d %b %Y' }}</div>
+      </article>
+      {% assign business_count = business_count | plus: 1 %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+</div>
+
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const hero = document.getElementById('home-hero');
-    const exploreButton = document.querySelector('.home-hero-button');
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+document.addEventListener('DOMContentLoaded', function () {
+  const hero = document.getElementById('home-hero');
+  const exploreButton = document.querySelector('.home-hero-button');
+  const moreButton = document.getElementById('home-more-button');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    if (exploreButton) {
-      exploreButton.addEventListener('click', function (event) {
-        const target = document.querySelector(this.getAttribute('href'));
-        if (!target) return;
-        event.preventDefault();
-        target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
-      });
-    }
-
-    if (hero && !reduceMotion && window.matchMedia('(min-width: 901px)').matches) {
-      let ticking = false;
-      const updateParallax = function () {
-        const rect = hero.getBoundingClientRect();
-        const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-        if (rect.bottom > 0 && rect.top < viewportHeight) {
-          const offset = Math.max(-24, Math.min(24, -rect.top * 0.08));
-          hero.style.setProperty('--hero-parallax-y', offset + 'px');
-        }
-        ticking = false;
-      };
-
-      window.addEventListener('scroll', function () {
-        if (!ticking) {
-          window.requestAnimationFrame(updateParallax);
-          ticking = true;
-        }
-      }, { passive: true });
-      updateParallax();
-    }
+  if (exploreButton) exploreButton.addEventListener('click', function (event) {
+    const target = document.querySelector(this.getAttribute('href')); if (!target) return;
+    event.preventDefault(); target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
   });
+
+  document.querySelectorAll('[data-card-link]').forEach(function(card){
+    card.addEventListener('click', function(e){ if(e.target.closest('a')) return; window.location.href = card.dataset.cardLink; });
+    card.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); window.location.href = card.dataset.cardLink; } });
+  });
+
+  if (moreButton) moreButton.addEventListener('click', function(){
+    const hidden = Array.from(document.querySelectorAll('.home-latest-card.home-latest-hidden')).slice(0,9);
+    hidden.forEach(function(card, i){ card.classList.remove('home-latest-hidden'); card.style.animationDelay = (i * 45) + 'ms'; card.classList.add('home-card-reveal'); });
+    if (!document.querySelector('.home-latest-card.home-latest-hidden')) moreButton.parentElement.remove();
+  });
+
+  if (hero && !reduceMotion && window.matchMedia('(min-width: 901px)').matches) {
+    let ticking = false;
+    const updateParallax = function () { const rect=hero.getBoundingClientRect(), vh=window.innerHeight||document.documentElement.clientHeight; if(rect.bottom>0&&rect.top<vh){const offset=Math.max(-24,Math.min(24,-rect.top*.08));hero.style.setProperty('--hero-parallax-y',offset+'px')} ticking=false; };
+    window.addEventListener('scroll',function(){if(!ticking){window.requestAnimationFrame(updateParallax);ticking=true}},{passive:true}); updateParallax();
+  }
+});
 </script>
