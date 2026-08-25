@@ -8,5 +8,23 @@
       <li><a href="{{ '/tribunales/' | relative_url }}" class="{% if page.url contains '/tribunales' %}active{% endif %}">Tribunales</a></li>
       <li><a href="{{ '/internacional/' | relative_url }}" class="{% if page.url contains '/internacional' %}active{% endif %}">Internacional</a></li>
     </ul>
+    <button class="site-search-toggle" id="site-search-toggle" type="button" aria-label="Buscar noticias" title="Buscar (Ctrl/⌘ + K)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 20-4.35-4.35a7.5 7.5 0 1 0-1.41 1.41L19.59 21 21 20ZM5 11a6 6 0 1 1 12 0 6 6 0 0 1-12 0Z"/></svg>
+    </button>
   </div>
 </nav>
+<div class="site-search-panel" id="site-search-panel" data-index-url="{{ '/search-index.json' | relative_url }}" hidden>
+  <div class="site-search-dialog" role="dialog" aria-modal="true" aria-label="Buscar en The Borinquen Post">
+    <div class="site-search-head">
+      <div class="site-search-input-wrap">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 20-4.35-4.35a7.5 7.5 0 1 0-1.41 1.41L19.59 21 21 20ZM5 11a6 6 0 1 1 12 0 6 6 0 0 1-12 0Z"/></svg>
+        <input id="site-search-input" type="search" autocomplete="off" placeholder="Buscar empresas, personas, temas o noticias…" aria-label="Buscar noticias">
+      </div>
+      <button id="site-search-close" class="site-search-close" type="button" aria-label="Cerrar búsqueda">×</button>
+    </div>
+    <div id="site-search-results" class="site-search-results">
+      <p class="search-empty">Escribe una palabra, empresa, persona o tema.</p>
+    </div>
+  </div>
+</div>
+<script src="{{ '/assets/js/search.js' | relative_url }}" defer></script>
