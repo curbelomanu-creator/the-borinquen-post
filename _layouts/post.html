@@ -2,13 +2,39 @@
 layout: default
 ---
 {% assign fallback_image = "/assets/images/default.jpg" %}
+{% assign article_image = page.web_image | default: page.image | default: page.featured_image | default: page.thumbnail | default: page.cover | default: page.og_image | default: fallback_image %}
+{% assign article_image_absolute = article_image | absolute_url %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "headline": {{ page.title | jsonify }},
+  "description": {{ page.description | default: page.excerpt | strip_html | strip_newlines | jsonify }},
+  "image": [{{ article_image_absolute | jsonify }}],
+  "datePublished": {{ page.date | date_to_xmlschema | jsonify }},
+  "dateModified": {{ page.last_modified_at | default: page.date | date_to_xmlschema | jsonify }},
+  "mainEntityOfPage": {"@type":"WebPage","@id":{{ page.url | absolute_url | jsonify }}},
+  "author": {"@type":"Organization","name":{{ page.author | default: "The Borinquen Post" | jsonify }}},
+  "publisher": {"@type":"Organization","name":"The Borinquen Post","url":{{ site.url | jsonify }}}
+}
+</script>
 <div class="reading-progress" aria-hidden="true"><span class="reading-progress-bar" id="reading-progress-bar"></span></div>
 <article class="article-layout" id="article-layout">
   <div class="category">{{ page.category }}</div>
   <h1 class="article-title">{{ page.title }}</h1>
   <div class="meta">{{ page.date | date: '%d de %B de %Y' }}{% if page.author %} · {{ page.author }}{% endif %}</div>
   {% if page.description %}<p class="excerpt">{{ page.description }}</p>{% endif %}
-  <img class="article-hero" src="{{ page.web_image | default: page.image | default: page.featured_image | default: page.thumbnail | default: page.cover | default: page.og_image | default: fallback_image | relative_url }}" alt="{{ page.title }}" onerror="this.onerror=null;this.src='{{ fallback_image }}';">
+
+  <div class="article-share" aria-label="Compartir esta noticia">
+    <span class="article-share-label">Compartir</span>
+    <a class="share-button share-whatsapp" href="https://wa.me/?text={{ page.title | append: ' ' | append: page.url | absolute_url | url_encode }}" target="_blank" rel="noopener noreferrer" aria-label="Compartir por WhatsApp">WhatsApp</a>
+    <a class="share-button" href="https://www.facebook.com/sharer/sharer.php?u={{ page.url | absolute_url | url_encode }}" target="_blank" rel="noopener noreferrer" aria-label="Compartir en Facebook">Facebook</a>
+    <a class="share-button" href="https://twitter.com/intent/tweet?text={{ page.title | url_encode }}&url={{ page.url | absolute_url | url_encode }}" target="_blank" rel="noopener noreferrer" aria-label="Compartir en X">X</a>
+    <a class="share-button" href="https://www.linkedin.com/sharing/share-offsite/?url={{ page.url | absolute_url | url_encode }}" target="_blank" rel="noopener noreferrer" aria-label="Compartir en LinkedIn">LinkedIn</a>
+    <button class="share-button share-copy" type="button" id="copy-article-link" data-url="{{ page.url | absolute_url }}">Copiar enlace</button>
+  </div>
+
+  <img class="article-hero" src="{{ article_image | relative_url }}" alt="{{ page.title }}" onerror="this.onerror=null;this.src='{{ fallback_image }}';">
   <div class="article-body">{{ content }}</div>
 
   {% assign related_count = 0 %}
@@ -19,57 +45,22 @@ layout: default
         {% if post.url != page.url and related_count < 3 %}
           {% assign is_related = false %}
           {% if post.category == page.category %}{% assign is_related = true %}{% endif %}
-          {% if page.tags and post.tags %}
-            {% for page_tag in page.tags %}
-              {% if post.tags contains page_tag %}{% assign is_related = true %}{% endif %}
-            {% endfor %}
-          {% endif %}
+          {% if page.tags and post.tags %}{% for page_tag in page.tags %}{% if post.tags contains page_tag %}{% assign is_related = true %}{% endif %}{% endfor %}{% endif %}
           {% if is_related %}
             {% assign related_image = post.web_image | default: post.image | default: post.featured_image | default: post.thumbnail | default: post.cover | default: fallback_image %}
-            <article class="card related-card">
-              <img src="{{ related_image | relative_url }}" alt="{{ post.title }}" onerror="this.onerror=null;this.src='{{ fallback_image }}';">
-              <div class="category">{{ post.category }}</div>
-              <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
-              {% if post.excerpt %}<p class="excerpt">{{ post.excerpt | strip_html | truncate: 130 }}</p>{% endif %}
-              <div class="meta">{{ post.date | date: '%d %b %Y' }}</div>
-            </article>
+            <article class="card related-card"><img src="{{ related_image | relative_url }}" alt="{{ post.title }}"><div class="category">{{ post.category }}</div><h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>{% if post.excerpt %}<p class="excerpt">{{ post.excerpt | strip_html | truncate: 130 }}</p>{% endif %}<div class="meta">{{ post.date | date: '%d %b %Y' }}</div></article>
             {% assign related_count = related_count | plus: 1 %}
           {% endif %}
         {% endif %}
       {% endfor %}
     </div>
-    {% if related_count == 0 %}
-      <p class="related-empty">Próximamente encontrarás más noticias relacionadas con este tema.</p>
-    {% endif %}
   </section>
-
   <a class="back-link" href="{{ '/' | relative_url }}">← Volver a portada</a>
 </article>
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const progressBar = document.getElementById('reading-progress-bar');
-    const article = document.getElementById('article-layout');
-    if (!progressBar || !article) return;
-
-    let ticking = false;
-    const updateProgress = function () {
-      const articleTop = article.offsetTop;
-      const articleHeight = article.offsetHeight;
-      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-      const scrollY = window.scrollY || window.pageYOffset;
-      const readableDistance = Math.max(1, articleHeight - viewportHeight);
-      const progress = Math.max(0, Math.min(1, (scrollY - articleTop + 90) / readableDistance));
-      progressBar.style.width = (progress * 100) + '%';
-      ticking = false;
-    };
-
-    window.addEventListener('scroll', function () {
-      if (!ticking) {
-        window.requestAnimationFrame(updateProgress);
-        ticking = true;
-      }
-    }, { passive: true });
-    window.addEventListener('resize', updateProgress, { passive: true });
-    updateProgress();
-  });
+document.addEventListener('DOMContentLoaded',function(){
+ const copy=document.getElementById('copy-article-link');
+ if(copy){copy.addEventListener('click',async function(){try{await navigator.clipboard.writeText(copy.dataset.url);copy.textContent='Enlace copiado';setTimeout(()=>copy.textContent='Copiar enlace',1800)}catch(e){window.prompt('Copia este enlace:',copy.dataset.url)}})}
+ const progressBar=document.getElementById('reading-progress-bar'),article=document.getElementById('article-layout');if(!progressBar||!article)return;let ticking=false;const updateProgress=function(){const articleTop=article.offsetTop,articleHeight=article.offsetHeight,viewportHeight=window.innerHeight||document.documentElement.clientHeight,scrollY=window.scrollY||window.pageYOffset,readableDistance=Math.max(1,articleHeight-viewportHeight),progress=Math.max(0,Math.min(1,(scrollY-articleTop+90)/readableDistance));progressBar.style.width=(progress*100)+'%';ticking=false};window.addEventListener('scroll',function(){if(!ticking){window.requestAnimationFrame(updateProgress);ticking=true}},{passive:true});window.addEventListener('resize',updateProgress,{passive:true});updateProgress();
+});
 </script>
