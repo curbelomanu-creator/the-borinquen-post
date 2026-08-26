@@ -1,0 +1,6 @@
+---
+layout: default
+title: Política de privacidad
+permalink: /privacidad/
+---
+<div class="simple-page"><h1>Política de privacidad</h1><p>The Borinquen Post utiliza herramientas tecnológicas para operar y comprender el uso de su sitio web. Entre ellas puede encontrarse Google Analytics, que recopila información sobre la interacción con el sitio, como páginas visitadas, tipo de dispositivo, fuente de tráfico y ubicación geográfica aproximada.</p><p>Esta información se utiliza para analizar el desempeño del sitio y mejorar la experiencia de los lectores.</p><h2>Comunicaciones</h2><p>Si en el futuro proporcionas voluntariamente tu correo electrónico para recibir comunicaciones o un boletín informativo, utilizaremos esa información para prestar el servicio solicitado y administrar dichas comunicaciones.</p><h2>Contacto</h2><p>Para consultas relacionadas con privacidad puedes escribir a <strong>theborinquenpost@gmail.com</strong>.</p><p><em>Última actualización: agosto de 2026.</em></p></div>
