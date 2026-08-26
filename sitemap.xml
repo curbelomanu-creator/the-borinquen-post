@@ -1,0 +1,10 @@
+---
+layout: null
+permalink: /sitemap.xml
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url><loc>{{ '/' | absolute_url }}</loc></url>
+{% for post in site.posts %}<url><loc>{{ post.url | absolute_url }}</loc><lastmod>{{ post.last_modified_at | default: post.date | date_to_xmlschema }}</lastmod></url>{% endfor %}
+{% for page in site.pages %}{% if page.url and page.url != '/sitemap.xml' and page.url != '/feed.xml' %}<url><loc>{{ page.url | absolute_url }}</loc></url>{% endif %}{% endfor %}
+</urlset>
