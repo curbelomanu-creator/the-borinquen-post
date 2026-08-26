@@ -1,0 +1,26 @@
+{
+  "name": "The Borinquen Post",
+  "short_name": "Borinquen Post",
+  "description": "Noticias y análisis sobre Puerto Rico.",
+  "lang": "es-PR",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#ffffff",
+  "theme_color": "#061a33",
+  "icons": [
+    {
+      "src": "/assets/images/favicon.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/images/favicon.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
