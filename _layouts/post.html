@@ -6,10 +6,10 @@ layout: default
 {% assign article_image_absolute = article_image | absolute_url %}
 {% assign article_url_absolute = page.url | absolute_url %}
 {% assign article_description = page.description | default: page.excerpt | strip_html | strip_newlines | strip %}
-{% assign article_author = page.author | default: site.title %}
 {% assign article_modified = page.last_modified_at | default: page.date %}
 {% assign publisher_url = site.url | default: "https://theborinquenpost.com" %}
 {% assign publisher_logo = "/assets/images/logo.png" | absolute_url %}
+{% assign author_url = "/autor/the-borinquen-post/" | absolute_url %}
 {% assign share_text = page.title | append: ' ' | append: article_url_absolute %}
 <script type="application/ld+json">
 {
@@ -17,7 +17,7 @@ layout: default
   "@type": "NewsArticle",
   "headline": {{ page.title | jsonify }},
   "description": {{ article_description | jsonify }},
-  "image": {{ article_image_absolute | jsonify }},
+  "image": [{{ article_image_absolute | jsonify }}],
   "datePublished": {{ page.date | date_to_xmlschema | jsonify }},
   "dateModified": {{ article_modified | date_to_xmlschema | jsonify }},
   "mainEntityOfPage": {
@@ -26,7 +26,8 @@ layout: default
   },
   "author": {
     "@type": "Organization",
-    "name": {{ article_author | jsonify }}
+    "name": "The Borinquen Post",
+    "url": {{ author_url | jsonify }}
   },
   "publisher": {
     "@type": "Organization",
@@ -43,7 +44,7 @@ layout: default
 <article class="article-layout" id="article-layout">
   <div class="category">{{ page.category }}</div>
   <h1 class="article-title">{{ page.title }}</h1>
-  <div class="meta">{{ page.date | date: '%d de %B de %Y' }}{% if page.author %} · {{ page.author }}{% endif %}</div>
+  <div class="meta">Por <a href="{{ '/autor/the-borinquen-post/' | relative_url }}">The Borinquen Post</a> · {{ page.date | date: '%d de %B de %Y · %-I:%M %p' }}</div>
   {% if page.description %}<p class="excerpt">{{ page.description }}</p>{% endif %}
 
   <div class="article-share" aria-label="Compartir esta noticia">
@@ -69,7 +70,7 @@ layout: default
           {% if page.tags and post.tags %}{% for page_tag in page.tags %}{% if post.tags contains page_tag %}{% assign is_related = true %}{% endif %}{% endfor %}{% endif %}
           {% if is_related %}
             {% assign related_image = post.web_image | default: post.image | default: post.featured_image | default: post.thumbnail | default: post.cover | default: fallback_image %}
-            <article class="card related-card"><img src="{{ related_image | relative_url }}" alt="{{ post.title }}"><div class="category">{{ post.category }}</div><h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>{% if post.excerpt %}<p class="excerpt">{{ post.excerpt | strip_html | truncate: 130 }}</p>{% endif %}<div class="meta">{{ post.date | date: '%d %b %Y' }}</div></article>
+            <article class="card related-card"><img src="{{ related_image | relative_url }}" alt="{{ post.title }}"><div class="category">{{ post.category }}</div><h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>{% if post.excerpt %}<p class="excerpt">{{ post.excerpt | strip_html | truncate: 130 }}</p>{% endif %}<div class="meta">{{ post.date | date: '%d %b %Y · %-I:%M %p' }}</div></article>
             {% assign related_count = related_count | plus: 1 %}
           {% endif %}
         {% endif %}
