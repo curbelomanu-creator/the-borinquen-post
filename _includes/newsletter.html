@@ -1,1 +1,46 @@
-<section class="newsletter" aria-labelledby="newsletter-title"><div class="newsletter-inner"><div class="newsletter-copy"><span class="newsletter-kicker">Newsletter</span><h2 id="newsletter-title">The Borinquen Post en tu correo</h2><p>Las noticias y análisis que importan en Puerto Rico, directamente en tu bandeja de entrada.</p></div><form class="newsletter-form" action="https://script.google.com/macros/s/AKfycbzsvK8CA1pqs6UpgSlG5YEM9F57iAuNDajzWqGYNQtm_oC8XSeI-2m0yIFq-PA-2fCy/exec" method="post" target="newsletter-frame" onsubmit="document.getElementById('newsletter-status').textContent='¡Gracias! Tu correo fue registrado.';"><div class="newsletter-fields"><input name="email" type="email" autocomplete="email" placeholder="Tu correo electrónico" required><input type="hidden" name="origen" value="The Borinquen Post Web"><button type="submit">Suscribirme</button></div><p class="newsletter-note">Al suscribirte aceptas recibir comunicaciones de The Borinquen Post. Puedes darte de baja cuando quieras.</p><p class="newsletter-status" id="newsletter-status" role="status"></p></form><iframe name="newsletter-frame" hidden></iframe></div></section>
+<section class="newsletter" aria-labelledby="newsletter-title">
+  <div class="newsletter-inner">
+    <div class="newsletter-copy">
+      <span class="newsletter-kicker">Newsletter</span>
+      <h2 id="newsletter-title">The Borinquen Post en tu correo</h2>
+      <p>Las noticias y análisis que importan en Puerto Rico, directamente en tu bandeja de entrada.</p>
+    </div>
+    <form class="newsletter-form" action="https://script.google.com/macros/s/AKfycbzsvK8CA1pqs6UpgSlG5YEM9F57iAuNDajzWqGYNQtm_oC8XSeI-2m0yIFq-PA-2fCy/exec" method="post" target="newsletter-frame" id="newsletter-form">
+      <div class="newsletter-fields">
+        <input name="email" type="email" autocomplete="email" placeholder="Tu correo electrónico" required>
+        <input type="hidden" name="origen" value="The Borinquen Post Web">
+        <button type="submit">Suscribirme</button>
+      </div>
+      <p class="newsletter-note">Al suscribirte aceptas recibir comunicaciones de The Borinquen Post. Puedes darte de baja cuando quieras.</p>
+    </form>
+    <iframe name="newsletter-frame" id="newsletter-frame" hidden></iframe>
+  </div>
+</section>
+
+<div class="newsletter-modal" id="newsletter-modal" aria-hidden="true">
+  <div class="newsletter-modal-backdrop" data-newsletter-close></div>
+  <div class="newsletter-modal-card" role="dialog" aria-modal="true" aria-labelledby="newsletter-modal-title">
+    <button class="newsletter-modal-close" type="button" aria-label="Cerrar" data-newsletter-close>&times;</button>
+    <div class="newsletter-modal-check" aria-hidden="true">✓</div>
+    <h2 id="newsletter-modal-title">¡Gracias por suscribirte!</h2>
+    <p>Tu correo fue registrado en The Borinquen Post.</p>
+    <button class="newsletter-modal-button" type="button" data-newsletter-close>Cerrar</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var form=document.getElementById('newsletter-form');
+  var frame=document.getElementById('newsletter-frame');
+  var modal=document.getElementById('newsletter-modal');
+  var submitted=false;
+  function openModal(){modal.classList.add('is-open');modal.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');}
+  function closeModal(){modal.classList.remove('is-open');modal.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');}
+  if(form&&frame&&modal){
+    form.addEventListener('submit',function(){submitted=true;});
+    frame.addEventListener('load',function(){if(!submitted)return;submitted=false;form.reset();openModal();if(typeof gtag==='function')gtag('event','newsletter_signup',{page_path:location.pathname});});
+    modal.querySelectorAll('[data-newsletter-close]').forEach(function(el){el.addEventListener('click',closeModal);});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&modal.classList.contains('is-open'))closeModal();});
+  }
+})();
+</script>
