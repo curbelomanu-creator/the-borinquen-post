@@ -1,0 +1,27 @@
+---
+layout: null
+permalink: /news-sitemap.xml
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+{% assign now_seconds = site.time | date: '%s' | plus: 0 %}
+{% assign cutoff_seconds = now_seconds | minus: 172800 %}
+{% assign sorted_posts = site.posts | sort: 'date' | reverse %}
+{% for post in sorted_posts %}
+  {% assign post_seconds = post.date | date: '%s' | plus: 0 %}
+  {% if post_seconds >= cutoff_seconds and post_seconds <= now_seconds %}
+  <url>
+    <loc>{{ post.url | absolute_url | xml_escape }}</loc>
+    <news:news>
+      <news:publication>
+        <news:name>The Borinquen Post</news:name>
+        <news:language>es</news:language>
+      </news:publication>
+      <news:publication_date>{{ post.date | date_to_xmlschema }}</news:publication_date>
+      <news:title>{{ post.title | strip_html | xml_escape }}</news:title>
+    </news:news>
+  </url>
+  {% endif %}
+{% endfor %}
+</urlset>
