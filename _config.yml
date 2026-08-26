@@ -1,8 +1,9 @@
 title: The Borinquen Post
 description: Noticias y análisis para Puerto Rico y el Caribe.
-url: ""
+url: "https://theborinquenpost.com"
 baseurl: ""
 language: es
+lang: es-PR
 markdown: kramdown
 permalink: /:categories/:year/:month/:day/:title/
 timezone: America/Puerto_Rico
