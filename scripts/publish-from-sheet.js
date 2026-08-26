@@ -5,293 +5,41 @@ const path = require('path');
 const { google } = require('googleapis');
 const { generateShareImage } = require('./generate-share-image');
 
-const CATEGORY_MAP = {
-  economia: 'economia',
-  empresas: 'empresas',
-  gobierno: 'gobierno',
-  internacional: 'internacional',
-  mercados: 'mercados',
-  tribunales: 'tribunales'
-};
+const CATEGORY_MAP = { economia:'economia', empresas:'empresas', gobierno:'gobierno', internacional:'internacional', mercados:'mercados', tribunales:'tribunales' };
+const PUERTO_RICO_OFFSET = '-04:00';
 
-function normalizeText(value) {
-  return (value || '')
-    .toString()
-    .trim()
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
-}
-
-function normalizeCategory(categoryRaw) {
-  const key = normalizeText(categoryRaw);
-  return CATEGORY_MAP[key] || null;
-}
-
-function toISODate(value) {
-  if (!value) return null;
-  const trimmed = value.toString().trim();
-  if (!trimmed) return null;
-
-  if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
-    const date = new Date(`${trimmed}T00:00:00Z`);
-    if (!Number.isNaN(date.getTime())) return trimmed;
-  }
-
-  if (/^\d+$/.test(trimmed)) {
-    const serial = Number(trimmed);
-    if (!Number.isNaN(serial) && serial > 0) {
-      const excelEpoch = new Date(Date.UTC(1899, 11, 30));
-      const date = new Date(excelEpoch.getTime() + serial * 86400000);
-      if (!Number.isNaN(date.getTime())) {
-        return date.toISOString().slice(0, 10);
-      }
-    }
-  }
-
-  const parsed = new Date(trimmed);
-  if (!Number.isNaN(parsed.getTime())) {
-    return parsed.toISOString().slice(0, 10);
-  }
-
+function normalizeText(value){return (value||'').toString().trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
+function normalizeCategory(categoryRaw){return CATEGORY_MAP[normalizeText(categoryRaw)]||null;}
+function toISODate(value){if(!value)return null;const trimmed=value.toString().trim();if(!trimmed)return null;if(/^\d{4}-\d{2}-\d{2}$/.test(trimmed))return trimmed;if(/^\d+$/.test(trimmed)){const serial=Number(trimmed);if(!Number.isNaN(serial)&&serial>0){const d=new Date(Date.UTC(1899,11,30)+serial*86400000);if(!Number.isNaN(d.getTime()))return d.toISOString().slice(0,10);}}const parsed=new Date(trimmed);return Number.isNaN(parsed.getTime())?null:parsed.toISOString().slice(0,10);}
+function getTodayISO(){return new Date().toISOString().slice(0,10);}
+function parsePublishAt(value){
+  if(!value)return null;
+  const text=String(value).trim(); if(!text)return null;
+  let m=text.match(/^(\d{4}-\d{2}-\d{2})[ T](\d{1,2}):(\d{2})(?::(\d{2}))?(?:\s*(AST))?$/i);
+  if(m){const hh=String(Number(m[2])).padStart(2,'0');return {date:m[1], timestamp:`${m[1]} ${hh}:${m[3]}:${m[4]||'00'} ${PUERTO_RICO_OFFSET}`};}
+  if(/^\d+(?:\.\d+)?$/.test(text)){const serial=Number(text);const whole=Math.floor(serial),frac=serial-whole;const base=new Date(Date.UTC(1899,11,30)+whole*86400000);const totalMinutes=Math.round(frac*1440);const hh=String(Math.floor(totalMinutes/60)%24).padStart(2,'0'),mm=String(totalMinutes%60).padStart(2,'0');const date=base.toISOString().slice(0,10);return {date,timestamp:`${date} ${hh}:${mm}:00 ${PUERTO_RICO_OFFSET}`};}
+  const parsed=new Date(text);if(!Number.isNaN(parsed.getTime())){const date=parsed.toISOString().slice(0,10);const hh=String(parsed.getHours()).padStart(2,'0'),mm=String(parsed.getMinutes()).padStart(2,'0'),ss=String(parsed.getSeconds()).padStart(2,'0');return {date,timestamp:`${date} ${hh}:${mm}:${ss} ${PUERTO_RICO_OFFSET}`};}
   return null;
 }
+const BYLINE_PREFIX='Redacción por The Borinquen Post.';
+function makeDescription(body){const clean=body.replace(/\s+/g,' ').trim();return clean.length<=160?clean:`${clean.slice(0,157).trimEnd()}...`;}
+function yamlEscape(value){return String(value||'').replace(/"/g,'\\"');}
+function normalizeBody(bodyRaw){const body=(bodyRaw||'').trim();if(!body)return body;if(body.startsWith(BYLINE_PREFIX)){const rest=body.slice(BYLINE_PREFIX.length).trimStart();const bylineHtml='<p class="article-byline-note"><em>Redacción por The Borinquen Post.</em></p>';return rest?`${bylineHtml}\n\n${rest}`:bylineHtml;}return body;}
+function readSiteBaseUrl(){const fallback='https://theborinquenpost.com',p=path.join(process.cwd(),'_config.yml');if(!fs.existsSync(p))return fallback;const raw=fs.readFileSync(p,'utf8');let url='',baseurl='';for(const line of raw.split(/\r?\n/)){const m=line.match(/^([a-zA-Z0-9_]+):\s*(.*)$/);if(!m)continue;const v=m[2].trim().replace(/^['"]|['"]$/g,'');if(m[1]==='url')url=v;if(m[1]==='baseurl')baseurl=v;}if(url){const u=url.replace(/\/+$/,'');const b=baseurl?`/${baseurl.replace(/^\/+|\/+$/g,'')}`:'';return `${u}${b}`;}return fallback;}
+function buildPublicImageUrl(baseUrl,filename){return `${baseUrl.replace(/\/+$/,'')}/assets/images/generated/${filename}`;}
 
-function getTodayISO() {
-  return new Date().toISOString().slice(0, 10);
+async function main(){
+ const sheetId=process.env.GOOGLE_SHEET_ID,sheetName=process.env.GOOGLE_SHEET_NAME||'Hoja 1',serviceAccountJson=process.env.GOOGLE_SERVICE_ACCOUNT_JSON;if(!sheetId)throw new Error('Falta GOOGLE_SHEET_ID');if(!serviceAccountJson)throw new Error('Falta GOOGLE_SERVICE_ACCOUNT_JSON');
+ const credentials=JSON.parse(serviceAccountJson);const auth=new google.auth.GoogleAuth({credentials,scopes:['https://www.googleapis.com/auth/spreadsheets']});const sheets=google.sheets({version:'v4',auth});
+ const response=await sheets.spreadsheets.values.get({spreadsheetId:sheetId,range:`${sheetName}!A:P`});const rows=response.data.values||[],dataRows=rows.slice(1),siteBaseUrl=readSiteBaseUrl();const postsDir=path.join(process.cwd(),'_posts');if(!fs.existsSync(postsDir))fs.mkdirSync(postsDir,{recursive:true});
+ let createdCount=0,skippedCount=0;const existingFiles=[],invalidCategories=new Set();
+ for(let i=0;i<dataRows.length;i+=1){const row=dataRows[i];const [titleRaw,bodyRaw,categoryRaw,sourceRaw,seoTitleRaw,seoDescriptionRaw,slugRaw,dateRaw,fraseImagenRaw,authorRaw,,,publishAtRaw]=row;const sheetRowNumber=i+2;const title=(titleRaw||'').trim(),body=normalizeBody(bodyRaw),slug=(slugRaw||'').trim();if(!title||!body||!categoryRaw||!slug){skippedCount++;continue;}const normalizedCategory=normalizeCategory(categoryRaw);if(!normalizedCategory){skippedCount++;invalidCategories.add((categoryRaw||'').trim());continue;}
+ const publishAt=parsePublishAt(publishAtRaw);const date=publishAt?.date||toISODate(dateRaw)||getTodayISO();const articleDate=publishAt?.timestamp||date;const filename=`${date}-${slug}.md`,filepath=path.join(postsDir,filename);if(fs.existsSync(filepath)){skippedCount++;existingFiles.push(filename);continue;}
+ const seoTitle=(seoTitleRaw||'').trim()||title,description=(seoDescriptionRaw||'').trim()||makeDescription(body),author=(authorRaw||'').trim()||'The Borinquen Post',source=(sourceRaw||'').trim(),fraseImagen=(fraseImagenRaw||'').trim()||title;const fallbackImage='/assets/images/default.jpg';let instagramImage=fallbackImage,webImage=fallbackImage,storyImage=fallbackImage,imageGenerated=false;
+ try{const generated=await generateShareImage({phrase:fraseImagen,category:normalizedCategory,slug});instagramImage=generated.instagramImage||fallbackImage;webImage=generated.webImage||fallbackImage;storyImage=generated.storyImage||fallbackImage;imageGenerated=true;}catch(error){console.warn(`⚠️ No se pudo generar imagen para ${slug}: ${error.message}`);}
+ const lines=['---','layout: post',`title: "${yamlEscape(title)}"`,`seo_title: "${yamlEscape(seoTitle)}"`,`description: "${yamlEscape(description)}"`,`date: "${articleDate}"`,`author: "${yamlEscape(author)}"`,`category: "${normalizedCategory}"`,`categories: ["${normalizedCategory}"]`,`image: "${yamlEscape(webImage)}"`,`web_image: "${yamlEscape(webImage)}"`,`instagram_image: "${yamlEscape(instagramImage)}"`,`story_image: "${yamlEscape(storyImage)}"`,`featured_image: "${yamlEscape(webImage)}"`,`thumbnail: "${yamlEscape(webImage)}"`,`cover: "${yamlEscape(webImage)}"`,`og_image: "${yamlEscape(instagramImage)}"`,`twitter:image: "${yamlEscape(instagramImage)}"`,`sources: "${yamlEscape(source)}"`,`slug: "${yamlEscape(slug)}"`,'---','',body,''];fs.writeFileSync(filepath,lines.join('\n'));createdCount++;console.log(`✅ Creado: _posts/${filename} (${articleDate})`);
+ if(imageGenerated){const imagePublicUrl=buildPublicImageUrl(siteBaseUrl,`${slug}.png`),storyPublicUrl=buildPublicImageUrl(siteBaseUrl,`${slug}-story.png`);await sheets.spreadsheets.values.batchUpdate({spreadsheetId:sheetId,requestBody:{valueInputOption:'RAW',data:[{range:`${sheetName}!K${sheetRowNumber}`,values:[[imagePublicUrl]]},{range:`${sheetName}!P${sheetRowNumber}`,values:[[storyPublicUrl]]}]}});}
+ }
+ console.log(`Posts creados: ${createdCount}; omitidos: ${skippedCount}; existentes: ${existingFiles.length}; categorías inválidas: ${invalidCategories.size}`);
 }
-
-const BYLINE_PREFIX = "Redacción por The Borinquen Post.";
-
-function makeDescription(body) {
-  const clean = body.replace(/\s+/g, ' ').trim();
-  if (clean.length <= 160) return clean;
-  return `${clean.slice(0, 157).trimEnd()}...`;
-}
-
-function yamlEscape(value) {
-  return String(value || '').replace(/"/g, '\\"');
-}
-
-function normalizeBody(bodyRaw) {
-  const body = (bodyRaw || '').trim();
-  if (!body) return body;
-
-  if (body.startsWith(BYLINE_PREFIX)) {
-    const rest = body.slice(BYLINE_PREFIX.length).trimStart();
-    const bylineHtml = '<p class="article-byline-note"><em>Redacción por The Borinquen Post.</em></p>';
-    return rest ? `${bylineHtml}
-
-${rest}` : bylineHtml;
-  }
-
-  return body;
-}
-
-function readSiteBaseUrl() {
-  const fallbackBaseUrl = 'https://theborinquenpost.com';
-  const configPath = path.join(process.cwd(), '_config.yml');
-
-  if (!fs.existsSync(configPath)) return fallbackBaseUrl;
-
-  const raw = fs.readFileSync(configPath, 'utf8');
-  const lines = raw.split(/\r?\n/);
-
-  let url = '';
-  let baseurl = '';
-
-  for (const line of lines) {
-    const match = line.match(/^([a-zA-Z0-9_]+):\s*(.*)$/);
-    if (!match) continue;
-    const key = match[1];
-    const value = match[2].trim().replace(/^['"]|['"]$/g, '');
-    if (key === 'url') url = value;
-    if (key === 'baseurl') baseurl = value;
-  }
-
-  if (url) {
-    const normalizedUrl = url.replace(/\/+$/, '');
-    const normalizedBase = baseurl ? `/${baseurl.replace(/^\/+|\/+$/g, '')}` : '';
-    return `${normalizedUrl}${normalizedBase}`;
-  }
-
-  if (baseurl) {
-    return `https://curbelomanu-creator.github.io${baseurl.startsWith('/') ? '' : '/'}${baseurl}`;
-  }
-
-  return fallbackBaseUrl;
-}
-
-function buildPublicImageUrl(baseUrl, filename) {
-  const normalizedBase = baseUrl.replace(/\/+$/, '');
-  return `${normalizedBase}/assets/images/generated/${filename}`;
-}
-
-
-async function main() {
-  const sheetId = process.env.GOOGLE_SHEET_ID;
-  const sheetName = process.env.GOOGLE_SHEET_NAME || 'Hoja 1';
-  const serviceAccountJson = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
-
-  if (!sheetId) throw new Error('Falta GOOGLE_SHEET_ID');
-  if (!serviceAccountJson) throw new Error('Falta GOOGLE_SERVICE_ACCOUNT_JSON');
-
-  const credentials = JSON.parse(serviceAccountJson);
-  const auth = new google.auth.GoogleAuth({
-    credentials,
-    scopes: ['https://www.googleapis.com/auth/spreadsheets']
-  });
-
-  const sheets = google.sheets({ version: 'v4', auth });
-  const response = await sheets.spreadsheets.values.get({
-    spreadsheetId: sheetId,
-    range: `${sheetName}!A:P`
-  });
-
-  const rows = response.data.values || [];
-  const dataRows = rows.slice(1);
-  const siteBaseUrl = readSiteBaseUrl();
-
-  const postsDir = path.join(process.cwd(), '_posts');
-  if (!fs.existsSync(postsDir)) fs.mkdirSync(postsDir, { recursive: true });
-
-  let createdCount = 0;
-  let skippedCount = 0;
-  const existingFiles = [];
-  const invalidCategories = new Set();
-
-  for (let i = 0; i < dataRows.length; i += 1) {
-    const row = dataRows[i];
-    const [titleRaw, bodyRaw, categoryRaw, sourceRaw, seoTitleRaw, seoDescriptionRaw, slugRaw, dateRaw, fraseImagenRaw, authorRaw] = row;
-    const sheetRowNumber = i + 2;
-
-    const title = (titleRaw || '').trim();
-    const body = normalizeBody(bodyRaw);
-    const slug = (slugRaw || '').trim();
-
-    if (!title || !body || !categoryRaw || !slug) {
-      skippedCount += 1;
-      console.warn(`⚠️ Fila ${i + 2} omitida por campos requeridos faltantes.`);
-      continue;
-    }
-
-    const normalizedCategory = normalizeCategory(categoryRaw);
-    if (!normalizedCategory) {
-      skippedCount += 1;
-      invalidCategories.add((categoryRaw || '').trim());
-      console.warn(`⚠️ Fila ${i + 2} omitida por categoría inválida: "${categoryRaw}".`);
-      continue;
-    }
-
-    const date = toISODate(dateRaw) || getTodayISO();
-    const filename = `${date}-${slug}.md`;
-    const filepath = path.join(postsDir, filename);
-
-    if (fs.existsSync(filepath)) {
-      skippedCount += 1;
-      existingFiles.push(filename);
-      continue;
-    }
-
-    const seoTitle = (seoTitleRaw || '').trim() || title;
-    const description = (seoDescriptionRaw || '').trim() || makeDescription(body);
-    const author = (authorRaw || '').trim() || 'The Borinquen Post';
-    const source = (sourceRaw || '').trim();
-    const fraseImagen = (fraseImagenRaw || '').trim() || title;
-
-    const fallbackImage = '/assets/images/default.jpg';
-    let instagramImage = fallbackImage;
-    let webImage = fallbackImage;
-    let storyImage = fallbackImage;
-    let imageGenerated = false;
-    try {
-      const generatedImages = await generateShareImage({
-        phrase: fraseImagen,
-        category: normalizedCategory,
-        slug
-      });
-      instagramImage = generatedImages.instagramImage || fallbackImage;
-      webImage = generatedImages.webImage || fallbackImage;
-      storyImage = generatedImages.storyImage || fallbackImage;
-      imageGenerated = true;
-    } catch (error) {
-      console.warn(`⚠️ No se pudo generar imagen para ${slug}: ${error.message}`);
-    }
-
-    const lines = [
-      '---',
-      'layout: post',
-      `title: "${yamlEscape(title)}"`,
-      `seo_title: "${yamlEscape(seoTitle)}"`,
-      `description: "${yamlEscape(description)}"`,
-      `date: "${date}"`,
-      `author: "${yamlEscape(author)}"`,
-      `category: "${normalizedCategory}"`,
-      `categories: ["${normalizedCategory}"]`,
-      `image: "${yamlEscape(webImage)}"`,
-      `web_image: "${yamlEscape(webImage)}"`,
-      `instagram_image: "${yamlEscape(instagramImage)}"`,
-      `story_image: "${yamlEscape(storyImage)}"`,
-      `featured_image: "${yamlEscape(webImage)}"`,
-      `thumbnail: "${yamlEscape(webImage)}"`,
-      `cover: "${yamlEscape(webImage)}"`,
-      `og_image: "${yamlEscape(instagramImage)}"`,
-      `twitter:image: "${yamlEscape(instagramImage)}"`,
-      `sources: "${yamlEscape(source)}"`,
-      `slug: "${yamlEscape(slug)}"`,
-      '---',
-      '',
-      body,
-      ''
-    ];
-
-    fs.writeFileSync(filepath, lines.join('\n'));
-    createdCount += 1;
-    console.log(`✅ Creado: _posts/${filename}`);
-
-    if (imageGenerated) {
-      const imagePublicUrl = buildPublicImageUrl(siteBaseUrl, `${slug}.png`);
-      const storyPublicUrl = buildPublicImageUrl(siteBaseUrl, `${slug}-story.png`);
-
-      await sheets.spreadsheets.values.batchUpdate({
-        spreadsheetId: sheetId,
-        requestBody: {
-          valueInputOption: 'RAW',
-          data: [
-            {
-              range: `${sheetName}!K${sheetRowNumber}`,
-              values: [[imagePublicUrl]]
-            },
-            {
-              range: `${sheetName}!P${sheetRowNumber}`,
-              values: [[storyPublicUrl]]
-            }
-          ]
-        }
-      });
-      console.log(`📝 Imagen publicada registrada en ${sheetName}!K${sheetRowNumber}`);
-      console.log(`📝 Imagen Story publicada registrada en ${sheetName}!P${sheetRowNumber}`);
-    }
-  }
-
-  console.log('');
-  console.log('===== Resumen de publicación =====');
-  console.log(`Filas leídas: ${dataRows.length}`);
-  console.log(`Posts creados: ${createdCount}`);
-  console.log(`Filas omitidas: ${skippedCount}`);
-  console.log(`Archivos ya existentes: ${existingFiles.length}`);
-  if (existingFiles.length > 0) {
-    existingFiles.forEach((file) => console.log(`- ${file}`));
-  }
-  console.log(`Categorías inválidas encontradas: ${invalidCategories.size}`);
-  if (invalidCategories.size > 0) {
-    Array.from(invalidCategories).forEach((cat) => console.log(`- ${cat}`));
-  }
-
-  process.exitCode = 0;
-}
-
-main().catch((error) => {
-  console.error('❌ Error en publish-from-sheet:', error.message);
-  process.exit(1);
-});
+main().catch(error=>{console.error('❌ Error en publish-from-sheet:',error.message);process.exit(1);});
