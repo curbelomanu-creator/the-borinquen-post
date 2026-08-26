@@ -1,0 +1,22 @@
+---
+layout: default
+title: The Borinquen Post | Autor
+permalink: /autor/the-borinquen-post/
+---
+<section class="simple-page author-page">
+  <div class="category">Autor</div>
+  <h1>The Borinquen Post</h1>
+  <p><strong>The Borinquen Post</strong> es un medio digital de noticias, análisis y perspectivas sobre Puerto Rico, con cobertura de economía, empresas, gobierno, tribunales, inversión y otros asuntos de interés público.</p>
+  <p>Los artículos firmados por The Borinquen Post son preparados y publicados por la redacción del medio.</p>
+  <h2>Últimas publicaciones</h2>
+  <div class="author-articles">
+    {% assign sorted_posts = site.posts | sort: 'date' | reverse %}
+    {% for post in sorted_posts limit:20 %}
+      <article class="author-article-item">
+        <div class="category">{{ post.category }}</div>
+        <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
+        <div class="meta">{{ post.date | date: '%d %b %Y · %-I:%M %p' }}</div>
+      </article>
+    {% endfor %}
+  </div>
+</section>
