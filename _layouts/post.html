@@ -4,6 +4,8 @@ layout: default
 {% assign fallback_image = "/assets/images/default.jpg" %}
 {% assign article_image = page.web_image | default: page.image | default: page.featured_image | default: page.thumbnail | default: page.cover | default: page.og_image | default: fallback_image %}
 {% assign article_image_absolute = article_image | absolute_url %}
+{% assign article_url_absolute = page.url | absolute_url %}
+{% assign share_text = page.title | append: ' ' | append: article_url_absolute %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -13,7 +15,7 @@ layout: default
   "image": [{{ article_image_absolute | jsonify }}],
   "datePublished": {{ page.date | date_to_xmlschema | jsonify }},
   "dateModified": {{ page.last_modified_at | default: page.date | date_to_xmlschema | jsonify }},
-  "mainEntityOfPage": {"@type":"WebPage","@id":{{ page.url | absolute_url | jsonify }}},
+  "mainEntityOfPage": {"@type":"WebPage","@id":{{ article_url_absolute | jsonify }}},
   "author": {"@type":"Organization","name":{{ page.author | default: "The Borinquen Post" | jsonify }}},
   "publisher": {"@type":"Organization","name":"The Borinquen Post","url":{{ site.url | jsonify }}}
 }
@@ -27,11 +29,11 @@ layout: default
 
   <div class="article-share" aria-label="Compartir esta noticia">
     <span class="article-share-label">Compartir</span>
-    <a class="share-button share-whatsapp" href="https://wa.me/?text={{ page.title | append: ' ' | append: page.url | absolute_url | url_encode }}" target="_blank" rel="noopener noreferrer" aria-label="Compartir por WhatsApp">WhatsApp</a>
-    <a class="share-button" href="https://www.facebook.com/sharer/sharer.php?u={{ page.url | absolute_url | url_encode }}" target="_blank" rel="noopener noreferrer" aria-label="Compartir en Facebook">Facebook</a>
-    <a class="share-button" href="https://twitter.com/intent/tweet?text={{ page.title | url_encode }}&url={{ page.url | absolute_url | url_encode }}" target="_blank" rel="noopener noreferrer" aria-label="Compartir en X">X</a>
-    <a class="share-button" href="https://www.linkedin.com/sharing/share-offsite/?url={{ page.url | absolute_url | url_encode }}" target="_blank" rel="noopener noreferrer" aria-label="Compartir en LinkedIn">LinkedIn</a>
-    <button class="share-button share-copy" type="button" id="copy-article-link" data-url="{{ page.url | absolute_url }}">Copiar enlace</button>
+    <a class="share-button share-whatsapp" href="https://wa.me/?text={{ share_text | url_encode }}" target="_blank" rel="noopener noreferrer" aria-label="Compartir por WhatsApp">WhatsApp</a>
+    <a class="share-button" href="https://www.facebook.com/sharer/sharer.php?u={{ article_url_absolute | url_encode }}" target="_blank" rel="noopener noreferrer" aria-label="Compartir en Facebook">Facebook</a>
+    <a class="share-button" href="https://twitter.com/intent/tweet?text={{ page.title | url_encode }}&url={{ article_url_absolute | url_encode }}" target="_blank" rel="noopener noreferrer" aria-label="Compartir en X">X</a>
+    <a class="share-button" href="https://www.linkedin.com/sharing/share-offsite/?url={{ article_url_absolute | url_encode }}" target="_blank" rel="noopener noreferrer" aria-label="Compartir en LinkedIn">LinkedIn</a>
+    <button class="share-button share-copy" type="button" id="copy-article-link" data-url="{{ article_url_absolute }}">Copiar enlace</button>
   </div>
 
   <img class="article-hero" src="{{ article_image | relative_url }}" alt="{{ page.title }}" onerror="this.onerror=null;this.src='{{ fallback_image }}';">
