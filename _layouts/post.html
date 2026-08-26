@@ -5,19 +5,38 @@ layout: default
 {% assign article_image = page.web_image | default: page.image | default: page.featured_image | default: page.thumbnail | default: page.cover | default: page.og_image | default: fallback_image %}
 {% assign article_image_absolute = article_image | absolute_url %}
 {% assign article_url_absolute = page.url | absolute_url %}
+{% assign article_description = page.description | default: page.excerpt | strip_html | strip_newlines | strip %}
+{% assign article_author = page.author | default: site.title %}
+{% assign article_modified = page.last_modified_at | default: page.date %}
+{% assign publisher_url = site.url | default: "https://theborinquenpost.com" %}
+{% assign publisher_logo = "/assets/images/logo.png" | absolute_url %}
 {% assign share_text = page.title | append: ' ' | append: article_url_absolute %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "NewsArticle",
   "headline": {{ page.title | jsonify }},
-  "description": {{ page.description | default: page.excerpt | strip_html | strip_newlines | jsonify }},
-  "image": [{{ article_image_absolute | jsonify }}],
+  "description": {{ article_description | jsonify }},
+  "image": {{ article_image_absolute | jsonify }},
   "datePublished": {{ page.date | date_to_xmlschema | jsonify }},
-  "dateModified": {{ page.last_modified_at | default: page.date | date_to_xmlschema | jsonify }},
-  "mainEntityOfPage": {"@type":"WebPage","@id":{{ article_url_absolute | jsonify }}},
-  "author": {"@type":"Organization","name":{{ page.author | default: "The Borinquen Post" | jsonify }}},
-  "publisher": {"@type":"Organization","name":"The Borinquen Post","url":{{ site.url | jsonify }}}
+  "dateModified": {{ article_modified | date_to_xmlschema | jsonify }},
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": {{ article_url_absolute | jsonify }}
+  },
+  "author": {
+    "@type": "Organization",
+    "name": {{ article_author | jsonify }}
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "The Borinquen Post",
+    "url": {{ publisher_url | jsonify }},
+    "logo": {
+      "@type": "ImageObject",
+      "url": {{ publisher_logo | jsonify }}
+    }
+  }
 }
 </script>
 <div class="reading-progress" aria-hidden="true"><span class="reading-progress-bar" id="reading-progress-bar"></span></div>
