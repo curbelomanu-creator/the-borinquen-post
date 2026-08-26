@@ -22,7 +22,7 @@ title: Inicio
     <div class="category">{{ post.category }}</div>
     <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
     {% if post.excerpt %}<p class="excerpt">{{ post.excerpt | strip_html | truncate: 190 }}</p>{% endif %}
-    <div class="meta">{{ post.date | date: '%d %b %Y' }}</div>
+    <div class="meta">{{ post.date | date: '%d %b %Y · %-I:%M %p' }}</div>
   </article>
   {% endfor %}
 </div>
@@ -36,7 +36,7 @@ title: Inicio
     <div class="category">{{ post.category }}</div>
     <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
     {% if post.excerpt %}<p class="excerpt">{{ post.excerpt | strip_html | truncate: 160 }}</p>{% endif %}
-    <div class="meta">{{ post.date | date: '%d %b %Y' }}</div>
+    <div class="meta">{{ post.date | date: '%d %b %Y · %-I:%M %p' }}</div>
   </article>
   {% endfor %}
 </div>
@@ -56,7 +56,7 @@ title: Inicio
         <div class="category">{{ post.category }}</div>
         <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
         {% if post.excerpt %}<p class="excerpt">{{ post.excerpt | strip_html | truncate: 150 }}</p>{% endif %}
-        <div class="meta">{{ post.date | date: '%d %b %Y' }}</div>
+        <div class="meta">{{ post.date | date: '%d %b %Y · %-I:%M %p' }}</div>
       </article>
       {% assign business_count = business_count | plus: 1 %}
       {% endif %}
