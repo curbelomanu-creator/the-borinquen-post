@@ -50,7 +50,7 @@ title: Inicio
   {% for post in sorted_posts %}
     {% if business_count < 4 %}
       {% assign cat = post.category | downcase %}
-      {% if cat == 'economía' or cat == 'economia' or cat == 'empresas' or cat == 'mercados' %}
+      {% if cat == 'economía' or cat == 'economia' or cat == 'empresas' %}
       <article class="card" data-card-link="{{ post.url | relative_url }}" tabindex="0" role="link">
         <img src="{{ post.web_image | default: post.image | default: post.featured_image | default: post.thumbnail | default: post.cover | default: fallback_image | relative_url }}" alt="{{ post.title }}" onerror="this.onerror=null;this.src='{{ fallback_image }}';">
         <div class="category">{{ post.category }}</div>
