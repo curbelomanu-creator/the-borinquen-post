@@ -1,10 +1,31 @@
 ---
 layout: null
 permalink: /sitemap.xml
+sitemap: false
 ---
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url><loc>{{ '/' | absolute_url }}</loc></url>
-{% for post in site.posts %}<url><loc>{{ post.url | absolute_url }}</loc><lastmod>{{ post.last_modified_at | default: post.date | date_to_xmlschema }}</lastmod></url>{% endfor %}
-{% for page in site.pages %}{% if page.url and page.url != '/sitemap.xml' and page.url != '/feed.xml' %}<url><loc>{{ page.url | absolute_url }}</loc></url>{% endif %}{% endfor %}
+  <url>
+    <loc>{{ '/' | absolute_url }}</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+  </url>
+
+  {% for post in site.posts %}
+  <url>
+    <loc>{{ post.url | absolute_url | xml_escape }}</loc>
+    <lastmod>{{ post.last_modified_at | default: post.date | date_to_xmlschema }}</lastmod>
+  </url>
+  {% endfor %}
+
+  {% for page in site.pages %}
+    {% assign page_url = page.url | default: '' %}
+    {% unless page_url == '/' or page_url == '/sitemap.xml' or page_url == '/news-sitemap.xml' or page_url == '/feed.xml' or page_url == '/search-index.json' or page_url == '/articles.json' or page_url == '/manifest.webmanifest' or page_url == '/service-worker.js' or page.sitemap == false %}
+      {% if page_url != '' %}
+  <url>
+    <loc>{{ page_url | absolute_url | xml_escape }}</loc>
+    {% if page.last_modified_at %}<lastmod>{{ page.last_modified_at | date_to_xmlschema }}</lastmod>{% endif %}
+  </url>
+      {% endif %}
+    {% endunless %}
+  {% endfor %}
 </urlset>
