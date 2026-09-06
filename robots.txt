@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://theborinquenpost.com/sitemap.xml
+Sitemap: https://theborinquenpost.com/news-sitemap.xml
