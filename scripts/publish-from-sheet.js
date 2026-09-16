@@ -9,6 +9,25 @@ const CATEGORY_MAP = { economia:'economia', empresas:'empresas', gobierno:'gobie
 const PUERTO_RICO_OFFSET = '-04:00';
 
 function normalizeText(value){return (value||'').toString().trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
+function normalizeImagePhraseCase(phraseRaw,titleRaw){
+  const phrase=String(phraseRaw||'').trim();
+  if(!phrase)return phrase;
+  const letters=phrase.match(/\p{L}/gu)||[];
+  const isAllCaps=letters.length>1&&letters.every(ch=>ch===ch.toLocaleUpperCase('es-PR'));
+  if(!isAllCaps)return phrase;
+  const referenceWords=new Map();
+  for(const word of String(titleRaw||'').match(/\p{L}+(?:[’'-]\p{L}+)*/gu)||[]){
+    const key=word.toLocaleLowerCase('es-PR');
+    if(!referenceWords.has(key))referenceWords.set(key,word);
+  }
+  let seenWord=false;
+  return phrase.replace(/\p{L}+(?:[’'-]\p{L}+)*/gu,word=>{
+    const key=word.toLocaleLowerCase('es-PR');
+    let replacement=referenceWords.get(key)||key;
+    if(!seenWord){replacement=replacement.charAt(0).toLocaleUpperCase('es-PR')+replacement.slice(1);seenWord=true;}
+    return replacement;
+  });
+}
 function normalizeCategory(categoryRaw){return CATEGORY_MAP[normalizeText(categoryRaw)]||null;}
 function toISODate(value){if(!value)return null;const trimmed=value.toString().trim();if(!trimmed)return null;if(/^\d{4}-\d{2}-\d{2}$/.test(trimmed))return trimmed;if(/^\d+$/.test(trimmed)){const serial=Number(trimmed);if(!Number.isNaN(serial)&&serial>0){const d=new Date(Date.UTC(1899,11,30)+serial*86400000);if(!Number.isNaN(d.getTime()))return d.toISOString().slice(0,10);}}const parsed=new Date(trimmed);return Number.isNaN(parsed.getTime())?null:parsed.toISOString().slice(0,10);}
 function getTodayISO(){return new Date().toISOString().slice(0,10);}
@@ -37,7 +56,7 @@ async function main(){
  const publishAt=parsePublishAt(publishAtRaw);
  if(publishAt?.instant && publishAt.instant.getTime()>Date.now()){futureCount++;console.log(`⏳ Pendiente hasta ${publishAt.timestamp}: ${slug}`);continue;}
  const date=publishAt?.date||toISODate(dateRaw)||getTodayISO();const articleDate=publishAt?.timestamp||date;const filename=`${date}-${slug}.md`,filepath=path.join(postsDir,filename);if(fs.existsSync(filepath)){skippedCount++;existingFiles.push(filename);continue;}
- const seoTitle=(seoTitleRaw||'').trim()||title,description=(seoDescriptionRaw||'').trim()||makeDescription(body),author=(authorRaw||'').trim()||'The Borinquen Post',source=(sourceRaw||'').trim(),fraseImagen=(fraseImagenRaw||'').trim()||title;const fallbackImage='/assets/images/default.jpg';let instagramImage=fallbackImage,webImage=fallbackImage,storyImage=fallbackImage,imageGenerated=false;
+ const seoTitle=(seoTitleRaw||'').trim()||title,description=(seoDescriptionRaw||'').trim()||makeDescription(body),author=(authorRaw||'').trim()||'The Borinquen Post',source=(sourceRaw||'').trim(),fraseImagen=normalizeImagePhraseCase((fraseImagenRaw||'').trim()||title,title);const fallbackImage='/assets/images/default.jpg';let instagramImage=fallbackImage,webImage=fallbackImage,storyImage=fallbackImage,imageGenerated=false;
  try{const generated=await generateShareImage({phrase:fraseImagen,category:normalizedCategory,slug});instagramImage=generated.instagramImage||fallbackImage;webImage=generated.webImage||fallbackImage;storyImage=generated.storyImage||fallbackImage;imageGenerated=true;}catch(error){console.warn(`⚠️ No se pudo generar imagen para ${slug}: ${error.message}`);}
  const lines=['---','layout: post',`title: "${yamlEscape(title)}"`,`seo_title: "${yamlEscape(seoTitle)}"`,`description: "${yamlEscape(description)}"`,`date: "${articleDate}"`,`author: "${yamlEscape(author)}"`,`category: "${normalizedCategory}"`,`categories: ["${normalizedCategory}"]`,`image: "${yamlEscape(webImage)}"`,`web_image: "${yamlEscape(webImage)}"`,`instagram_image: "${yamlEscape(instagramImage)}"`,`story_image: "${yamlEscape(storyImage)}"`,`featured_image: "${yamlEscape(webImage)}"`,`thumbnail: "${yamlEscape(webImage)}"`,`cover: "${yamlEscape(webImage)}"`,`og_image: "${yamlEscape(instagramImage)}"`,`twitter:image: "${yamlEscape(instagramImage)}"`,`sources: "${yamlEscape(source)}"`,`slug: "${yamlEscape(slug)}"`,'---','',body,''];fs.writeFileSync(filepath,lines.join('\n'));createdCount++;console.log(`✅ Creado: _posts/${filename} (${articleDate})`);
  if(imageGenerated){const imagePublicUrl=buildPublicImageUrl(siteBaseUrl,`${slug}.png`),storyPublicUrl=buildPublicImageUrl(siteBaseUrl,`${slug}-story.png`);await sheets.spreadsheets.values.batchUpdate({spreadsheetId:sheetId,requestBody:{valueInputOption:'RAW',data:[{range:`${sheetName}!K${sheetRowNumber}`,values:[[imagePublicUrl]]},{range:`${sheetName}!P${sheetRowNumber}`,values:[[storyPublicUrl]]}]}});}
