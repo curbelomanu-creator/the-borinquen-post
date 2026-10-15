@@ -171,7 +171,7 @@ async function generateShareImage({ phrase, category, slug }) {
     { maxCharsPerLine: 28, maxLines: 8, quoteFontSize: 58, quoteLineHeight: 72, contentShiftY: -55 }
   ]);
 
-  const categoryLabel = CATEGORY_DISPLAY_LABELS[category] || String(category || "").toUpperCase();
+  const categoryLabel = CATEGORY_DISPLAY_LABELS[category] || String(category || "").replace(/-/g, " ").toUpperCase();
 
   await renderImage({
     baseImage: INSTAGRAM_BASE_IMAGE,

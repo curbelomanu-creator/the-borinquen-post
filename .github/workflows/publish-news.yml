@@ -2,6 +2,12 @@ name: Publish news from Google Sheet
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/publish-from-sheet.js'
+      - 'scripts/generate-share-image.js'
+      - 'tests/publisher.test.js'
+      - '.github/workflows/publish-news.yml'
   schedule:
     - cron: '*/30 * * * *'
 
@@ -25,6 +31,11 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      - name: Validate news publisher
+        run: |
+          node --check scripts/publish-from-sheet.js
+          node --test tests/publisher.test.js
 
       - name: Generate posts from sheet
         env:

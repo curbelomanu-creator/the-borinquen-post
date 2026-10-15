@@ -5,7 +5,16 @@ const path = require('path');
 const { google } = require('googleapis');
 const { generateShareImage } = require('./generate-share-image');
 
-const CATEGORY_MAP = { economia:'economia', empresas:'empresas', gobierno:'gobierno', internacional:'internacional', mercados:'mercados', tribunales:'tribunales' };
+// Categorías editoriales aceptadas en el Google Sheet. No convertir noticias en secciones erróneas.
+const CATEGORY_MAP = Object.freeze({
+  economia: 'economia', empresas: 'empresas', gobierno: 'gobierno',
+  internacional: 'internacional', mercados: 'mercados', tribunales: 'tribunales',
+  seguridad: 'seguridad', 'puerto rico': 'puerto-rico', deportes: 'deportes',
+  'el tiempo': 'el-tiempo', entretenimiento: 'entretenimiento', salud: 'salud',
+  cultura: 'cultura', politica: 'politica', ambiente: 'ambiente', energia: 'energia',
+  turismo: 'turismo', educacion: 'educacion', locales: 'locales', clima: 'clima',
+  ciencia: 'ciencia', 'ciencia y tecnologia': 'ciencia-y-tecnologia', empleo: 'empleo'
+});
 const PUERTO_RICO_OFFSET = '-04:00';
 
 function normalizeText(value){return (value||'').toString().trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
@@ -40,6 +49,11 @@ function parsePublishAt(value){
   const parsed=new Date(text);if(!Number.isNaN(parsed.getTime())){const date=parsed.toISOString().slice(0,10);const hh=String(parsed.getHours()).padStart(2,'0'),mm=String(parsed.getMinutes()).padStart(2,'0'),ss=String(parsed.getSeconds()).padStart(2,'0');return {date,timestamp:`${date} ${hh}:${mm}:${ss} ${PUERTO_RICO_OFFSET}`, instant:parsed};}
   return null;
 }
+// Evita publicar de golpe noticias antiguas al incorporar nuevas categorías.
+function isPublicationTooOld(publishAt, date, nowMs=Date.now(), maxAgeDays=3) {
+  const when = publishAt?.instant?.getTime() ?? new Date(`${date}T00:00:00${PUERTO_RICO_OFFSET}`).getTime();
+  return Number.isFinite(when) && (nowMs - when) > maxAgeDays * 86400000;
+}
 const BYLINE_PREFIX='Redacción por The Borinquen Post.';
 function makeDescription(body){const clean=body.replace(/\s+/g,' ').trim();return clean.length<=160?clean:`${clean.slice(0,157).trimEnd()}...`;}
 function yamlEscape(value){return String(value||'').replace(/"/g,'\\"');}
@@ -50,12 +64,12 @@ function buildPublicImageUrl(baseUrl,filename){return `${baseUrl.replace(/\/+$/,
 async function main(){
  const sheetId=process.env.GOOGLE_SHEET_ID,sheetName=process.env.GOOGLE_SHEET_NAME||'Hoja 1',serviceAccountJson=process.env.GOOGLE_SERVICE_ACCOUNT_JSON;if(!sheetId)throw new Error('Falta GOOGLE_SHEET_ID');if(!serviceAccountJson)throw new Error('Falta GOOGLE_SERVICE_ACCOUNT_JSON');
  const credentials=JSON.parse(serviceAccountJson);const auth=new google.auth.GoogleAuth({credentials,scopes:['https://www.googleapis.com/auth/spreadsheets']});const sheets=google.sheets({version:'v4',auth});
- const response=await sheets.spreadsheets.values.get({spreadsheetId:sheetId,range:`${sheetName}!A:P`});const rows=response.data.values||[],dataRows=rows.slice(1),siteBaseUrl=readSiteBaseUrl();const postsDir=path.join(process.cwd(),'_posts');if(!fs.existsSync(postsDir))fs.mkdirSync(postsDir,{recursive:true});
- let createdCount=0,correctedImageCount=0,skippedCount=0,futureCount=0;const existingFiles=[],invalidCategories=new Set();
+ const response=await sheets.spreadsheets.values.get({spreadsheetId:sheetId,range:`${sheetName}!A:P`});const rows=response.data.values||[],dataRows=rows.slice(1),siteBaseUrl=readSiteBaseUrl();const postsDir=path.join(process.cwd(),'_posts');if(!fs.existsSync(postsDir))fs.mkdirSync(postsDir,{recursive:true});const maxAgeDays=Math.max(1,Number(process.env.PUBLISH_MAX_AGE_DAYS)||3),allowBackfill=process.env.PUBLISH_BACKFILL==='true';
+ let createdCount=0,correctedImageCount=0,skippedCount=0,futureCount=0,staleCount=0;const existingFiles=[],invalidCategories=new Set();
  for(let i=0;i<dataRows.length;i+=1){const row=dataRows[i];const [titleRaw,bodyRaw,categoryRaw,sourceRaw,seoTitleRaw,seoDescriptionRaw,slugRaw,dateRaw,fraseImagenRaw,authorRaw,,,publishAtRaw]=row;const sheetRowNumber=i+2;const title=(titleRaw||'').trim(),body=normalizeBody(bodyRaw),slug=(slugRaw||'').trim();if(!title||!body||!categoryRaw||!slug){skippedCount++;continue;}const normalizedCategory=normalizeCategory(categoryRaw);if(!normalizedCategory){skippedCount++;invalidCategories.add((categoryRaw||'').trim());continue;}
  const publishAt=parsePublishAt(publishAtRaw);
  if(publishAt?.instant && publishAt.instant.getTime()>Date.now()){futureCount++;console.log(`⏳ Pendiente hasta ${publishAt.timestamp}: ${slug}`);continue;}
- const date=publishAt?.date||toISODate(dateRaw)||getTodayISO();const articleDate=publishAt?.timestamp||date;const filename=`${date}-${slug}.md`,filepath=path.join(postsDir,filename);const rawFraseImagen=(fraseImagenRaw||'').trim()||title;const fraseImagen=normalizeImagePhraseCase(rawFraseImagen,title);const imagePhraseWasNormalized=fraseImagen!==rawFraseImagen;
+ const date=publishAt?.date||toISODate(dateRaw)||getTodayISO();if(!allowBackfill && isPublicationTooOld(publishAt,date,Date.now(),maxAgeDays)){staleCount++;continue;}const articleDate=publishAt?.timestamp||date;const filename=`${date}-${slug}.md`,filepath=path.join(postsDir,filename);const rawFraseImagen=(fraseImagenRaw||'').trim()||title;const fraseImagen=normalizeImagePhraseCase(rawFraseImagen,title);const imagePhraseWasNormalized=fraseImagen!==rawFraseImagen;
  if(fs.existsSync(filepath)){
   if(imagePhraseWasNormalized){
    try{
@@ -72,6 +86,7 @@ async function main(){
  const lines=['---','layout: post',`title: "${yamlEscape(title)}"`,`seo_title: "${yamlEscape(seoTitle)}"`,`description: "${yamlEscape(description)}"`,`date: "${articleDate}"`,`author: "${yamlEscape(author)}"`,`category: "${normalizedCategory}"`,`categories: ["${normalizedCategory}"]`,`image: "${yamlEscape(webImage)}"`,`web_image: "${yamlEscape(webImage)}"`,`instagram_image: "${yamlEscape(instagramImage)}"`,`story_image: "${yamlEscape(storyImage)}"`,`featured_image: "${yamlEscape(webImage)}"`,`thumbnail: "${yamlEscape(webImage)}"`,`cover: "${yamlEscape(webImage)}"`,`og_image: "${yamlEscape(instagramImage)}"`,`twitter:image: "${yamlEscape(instagramImage)}"`,`sources: "${yamlEscape(source)}"`,`slug: "${yamlEscape(slug)}"`,'---','',body,''];fs.writeFileSync(filepath,lines.join('\n'));createdCount++;console.log(`✅ Creado: _posts/${filename} (${articleDate})`);
  if(imageGenerated){const imagePublicUrl=buildPublicImageUrl(siteBaseUrl,`${slug}.png`),storyPublicUrl=buildPublicImageUrl(siteBaseUrl,`${slug}-story.png`);const updates=[{range:`${sheetName}!K${sheetRowNumber}`,values:[[imagePublicUrl]]},{range:`${sheetName}!P${sheetRowNumber}`,values:[[storyPublicUrl]]}];if(imagePhraseWasNormalized)updates.unshift({range:`${sheetName}!I${sheetRowNumber}`,values:[[fraseImagen]]});await sheets.spreadsheets.values.batchUpdate({spreadsheetId:sheetId,requestBody:{valueInputOption:'RAW',data:updates}});}
  }
- console.log(`Posts creados: ${createdCount}; imágenes corregidas: ${correctedImageCount}; pendientes por hora: ${futureCount}; omitidos: ${skippedCount}; existentes: ${existingFiles.length}; categorías inválidas: ${invalidCategories.size}`);
+ console.log(`Posts creados: ${createdCount}; imágenes corregidas: ${correctedImageCount}; pendientes por hora: ${futureCount}; antiguos conservados sin republicar: ${staleCount}; omitidos: ${skippedCount}; existentes: ${existingFiles.length}; categorías inválidas: ${invalidCategories.size}`);
 }
-main().catch(error=>{console.error('❌ Error en publish-from-sheet:',error.message);process.exit(1);});
+if(require.main===module){main().catch(error=>{console.error('❌ Error en publish-from-sheet:',error.message);process.exit(1);});}
+module.exports={normalizeCategory,parsePublishAt,isPublicationTooOld};
