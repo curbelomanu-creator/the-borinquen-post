@@ -46,26 +46,19 @@ jobs:
 
       - name: Commit and push if there are generated changes
         run: |
-          changed_files="$(git status --porcelain)"
-
-          generated_changes="$(printf '%s\n' "$changed_files" | awk '{print $2}' | grep -E '^(_posts/|assets/images/generated/|articles\.json$|categories/|category/|static/|_pages/)' || true)"
-
-          if [ -z "$generated_changes" ]; then
-            echo "No generated content changes to commit."
-            exit 0
-          fi
-
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add _posts assets/images/generated articles.json
-
-          printf '%s\n' "$generated_changes" | grep -E '^(categories/|category/|static/|_pages/)' | while read -r file; do
-            [ -n "$file" ] && git add "$file"
+          # git status --porcelain quotes paths with spaces/accented characters.
+          # Stage intended generated paths directly instead of parsing filenames.
+          for generated_path in _posts assets/images/generated articles.json categories category static _pages; do
+            if [ -e "$generated_path" ]; then
+              git add -A -- "$generated_path"
+            fi
           done
 
           if git diff --cached --quiet; then
-            echo "No staged generated changes after filtering."
+            echo "No generated content changes to commit."
             exit 0
           fi
 

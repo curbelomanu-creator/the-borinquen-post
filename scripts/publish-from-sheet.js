@@ -38,6 +38,7 @@ function normalizeImagePhraseCase(phraseRaw,titleRaw){
   });
 }
 function normalizeCategory(categoryRaw){return CATEGORY_MAP[normalizeText(categoryRaw)]||null;}
+function isValidSlug(slug){return typeof slug==='string' && slug.length<=120 && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug);}
 function toISODate(value){if(!value)return null;const trimmed=value.toString().trim();if(!trimmed)return null;if(/^\d{4}-\d{2}-\d{2}$/.test(trimmed))return trimmed;if(/^\d+$/.test(trimmed)){const serial=Number(trimmed);if(!Number.isNaN(serial)&&serial>0){const d=new Date(Date.UTC(1899,11,30)+serial*86400000);if(!Number.isNaN(d.getTime()))return d.toISOString().slice(0,10);}}const parsed=new Date(trimmed);return Number.isNaN(parsed.getTime())?null:parsed.toISOString().slice(0,10);}
 function getTodayISO(){return new Date().toISOString().slice(0,10);}
 function parsePublishAt(value){
@@ -66,10 +67,11 @@ async function main(){
  const credentials=JSON.parse(serviceAccountJson);const auth=new google.auth.GoogleAuth({credentials,scopes:['https://www.googleapis.com/auth/spreadsheets']});const sheets=google.sheets({version:'v4',auth});
  const response=await sheets.spreadsheets.values.get({spreadsheetId:sheetId,range:`${sheetName}!A:P`});const rows=response.data.values||[],dataRows=rows.slice(1),siteBaseUrl=readSiteBaseUrl();const postsDir=path.join(process.cwd(),'_posts');if(!fs.existsSync(postsDir))fs.mkdirSync(postsDir,{recursive:true});const maxAgeDays=Math.max(1,Number(process.env.PUBLISH_MAX_AGE_DAYS)||3),allowBackfill=process.env.PUBLISH_BACKFILL==='true';
  let createdCount=0,correctedImageCount=0,skippedCount=0,futureCount=0,staleCount=0;const existingFiles=[],invalidCategories=new Set();
- for(let i=0;i<dataRows.length;i+=1){const row=dataRows[i];const [titleRaw,bodyRaw,categoryRaw,sourceRaw,seoTitleRaw,seoDescriptionRaw,slugRaw,dateRaw,fraseImagenRaw,authorRaw,,,publishAtRaw]=row;const sheetRowNumber=i+2;const title=(titleRaw||'').trim(),body=normalizeBody(bodyRaw),slug=(slugRaw||'').trim();if(!title||!body||!categoryRaw||!slug){skippedCount++;continue;}const normalizedCategory=normalizeCategory(categoryRaw);if(!normalizedCategory){skippedCount++;invalidCategories.add((categoryRaw||'').trim());continue;}
- const publishAt=parsePublishAt(publishAtRaw);
+ for(let i=0;i<dataRows.length;i+=1){const row=dataRows[i];const [titleRaw,bodyRaw,categoryRaw,sourceRaw,seoTitleRaw,seoDescriptionRaw,slugRaw,dateRaw,fraseImagenRaw,authorRaw,,,publishAtRaw]=row;const sheetRowNumber=i+2;const title=(titleRaw||'').trim(),body=normalizeBody(bodyRaw),slug=(slugRaw||'').trim();if(!title||!body||!categoryRaw||!isValidSlug(slug)){skippedCount++;continue;}const normalizedCategory=normalizeCategory(categoryRaw);if(!normalizedCategory){skippedCount++;invalidCategories.add((categoryRaw||'').trim());continue;}
+ const publishAt=parsePublishAt(publishAtRaw),providedDate=toISODate(dateRaw);
+ if(!publishAt && !providedDate){skippedCount++;continue;}
  if(publishAt?.instant && publishAt.instant.getTime()>Date.now()){futureCount++;console.log(`⏳ Pendiente hasta ${publishAt.timestamp}: ${slug}`);continue;}
- const date=publishAt?.date||toISODate(dateRaw)||getTodayISO();if(!allowBackfill && isPublicationTooOld(publishAt,date,Date.now(),maxAgeDays)){staleCount++;continue;}const articleDate=publishAt?.timestamp||date;const filename=`${date}-${slug}.md`,filepath=path.join(postsDir,filename);const rawFraseImagen=(fraseImagenRaw||'').trim()||title;const fraseImagen=normalizeImagePhraseCase(rawFraseImagen,title);const imagePhraseWasNormalized=fraseImagen!==rawFraseImagen;
+ const date=publishAt?.date||providedDate;if(!allowBackfill && isPublicationTooOld(publishAt,date,Date.now(),maxAgeDays)){staleCount++;continue;}const articleDate=publishAt?.timestamp||date;const filename=`${date}-${slug}.md`,filepath=path.join(postsDir,filename);const rawFraseImagen=(fraseImagenRaw||'').trim()||title;const fraseImagen=normalizeImagePhraseCase(rawFraseImagen,title);const imagePhraseWasNormalized=fraseImagen!==rawFraseImagen;
  if(fs.existsSync(filepath)){
   if(imagePhraseWasNormalized){
    try{
@@ -89,4 +91,4 @@ async function main(){
  console.log(`Posts creados: ${createdCount}; imágenes corregidas: ${correctedImageCount}; pendientes por hora: ${futureCount}; antiguos conservados sin republicar: ${staleCount}; omitidos: ${skippedCount}; existentes: ${existingFiles.length}; categorías inválidas: ${invalidCategories.size}`);
 }
 if(require.main===module){main().catch(error=>{console.error('❌ Error en publish-from-sheet:',error.message);process.exit(1);});}
-module.exports={normalizeCategory,parsePublishAt,isPublicationTooOld};
+module.exports={normalizeCategory,parsePublishAt,isPublicationTooOld,isValidSlug};

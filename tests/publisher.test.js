@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { normalizeCategory, parsePublishAt, isPublicationTooOld } = require('../scripts/publish-from-sheet');
+const { normalizeCategory, parsePublishAt, isPublicationTooOld, isValidSlug } = require('../scripts/publish-from-sheet');
 
 test('admite categorías originales y las que ya se usan en Google Sheets', () => {
   const examples = {
@@ -28,4 +28,11 @@ test('omite noticias antiguas sin bloquear las nuevas o futuras', () => {
   assert.equal(isPublicationTooOld(parsePublishAt('2026-10-06 12:00'),'2026-10-06',now,3),true);
   assert.equal(isPublicationTooOld(parsePublishAt('2026-10-15 17:30'),'2026-10-15',now,3),false);
   assert.equal(isPublicationTooOld(null,'2026-10-14',now,3),false);
+});
+
+test('solo permite slugs de noticias válidos y evita textos desplazados', () => {
+  assert.equal(isValidSlug('noticia-legitima-puerto-rico-2026'), true);
+  assert.equal(isValidSlug('El Nuevo Día'), false);
+  assert.equal(isValidSlug('Una noticia completa en otra columna.'), false);
+  assert.equal(isValidSlug(''), false);
 });
