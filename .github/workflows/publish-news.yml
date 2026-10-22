@@ -40,8 +40,10 @@ jobs:
       - name: Generate posts from sheet
         env:
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
-          GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
-          GOOGLE_SHEET_NAME: ${{ secrets.GOOGLE_SHEET_NAME }}
+          # Publicaciones: usar la hoja vinculada al Apps Script activo.
+          # El identificador de una hoja no es una credencial de acceso.
+          GOOGLE_SHEET_ID: '1Piemxh28IR6kRcqTyDlOqrNfRYaZdHfJ_ymq3U-aX3c'
+          GOOGLE_SHEET_NAME: 'Hoja 1'
         run: npm run publish-from-sheet
 
       - name: Commit and push if there are generated changes
