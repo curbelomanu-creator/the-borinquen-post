@@ -1,0 +1,41 @@
+---
+layout: default
+title: Archivo de noticias por tema
+description: "Explora las noticias y análisis de The Borinquen Post por tema, con acceso directo a las publicaciones históricas de cada sección."
+permalink: /temas/
+---
+
+<section class="simple-page">
+  <h1>Archivo de noticias por tema</h1>
+  <p>Consulta las publicaciones de The Borinquen Post organizadas por tema. Las noticias más recientes de cada sección aparecen primero.</p>
+</section>
+
+{% assign temas = site.categories | sort %}
+<nav aria-label="Índice de temas">
+  <div class="section-title"><h2>Explorar temas</h2></div>
+  <ul class="archive-topic-index">
+    {% for tema in temas %}
+      {% assign entradas = tema[1] %}
+      {% if entradas.size > 0 %}
+      <li><a href="#tema-{{ tema[0] | slugify }}">{{ tema[0] | replace: '-', ' ' | capitalize }} ({{ entradas.size }})</a></li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</nav>
+
+{% for tema in temas %}
+  {% assign entradas = tema[1] | sort: 'date' | reverse %}
+  {% if entradas.size > 0 %}
+  <section id="tema-{{ tema[0] | slugify }}" aria-labelledby="titulo-tema-{{ tema[0] | slugify }}">
+    <div class="section-title"><h2 id="titulo-tema-{{ tema[0] | slugify }}">{{ tema[0] | replace: '-', ' ' | capitalize }}</h2></div>
+    <div class="author-articles">
+      {% for post in entradas %}
+      <article class="author-article-item">
+        <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
+        <div class="meta"><time datetime="{{ post.date | date: '%Y-%m-%d' }}">{{ post.date | date: '%d %b %Y · %-I:%M %p' }}</time></div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+{% endfor %}
