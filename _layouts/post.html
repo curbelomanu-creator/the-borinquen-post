@@ -42,7 +42,7 @@ layout: default
 </script>
 <div class="reading-progress" aria-hidden="true"><span class="reading-progress-bar" id="reading-progress-bar"></span></div>
 <article class="article-layout" id="article-layout">
-  <div class="category">{{ page.category }}</div>
+  <div class="category"><a href="{{ '/temas/' | relative_url }}#tema-{{ page.category | slugify }}" aria-label="Ver noticias de {{ page.category | escape }}">{{ page.category }}</a></div>
   <h1 class="article-title">{{ page.title }}</h1>
   <div class="meta">Por <a href="{{ '/autor/the-borinquen-post/' | relative_url }}">The Borinquen Post</a> · {{ page.date | date: '%d de %B de %Y · %-I:%M %p' }}</div>
   {% if page.description %}<p class="excerpt">{{ page.description }}</p>{% endif %}
