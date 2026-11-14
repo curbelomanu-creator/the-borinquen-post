@@ -248,10 +248,21 @@ async function generateShareImage({ phrase, category, slug }) {
     }
   });
 
+  // Meta Instagram Content Publishing accepts standard JPEG media.
+  // Preserve the original PNGs for website and historical references.
+  await sharp(instagramOutputPath)
+    .flatten({ background: "#FFFFFF" })
+    .jpeg({ quality: 88, mozjpeg: true })
+    .toFile(path.join(OUTPUT_DIR, `${slug}.jpg`));
+  await sharp(storyOutputPath)
+    .flatten({ background: "#FFFFFF" })
+    .jpeg({ quality: 88, mozjpeg: true })
+    .toFile(path.join(OUTPUT_DIR, `${slug}-story.jpg`));
+
   return {
-    instagramImage: `/assets/images/generated/${slug}.png`,
+    instagramImage: `/assets/images/generated/${slug}.jpg`,
     webImage: `/assets/images/generated/${slug}-web.png`,
-    storyImage: `/assets/images/generated/${slug}-story.png`
+    storyImage: `/assets/images/generated/${slug}-story.jpg`
   };
 }
 
