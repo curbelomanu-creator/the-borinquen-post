@@ -100,7 +100,11 @@ async function main(){
  const publishAt=parsePublishAt(publishAtRaw),providedDate=toISODate(dateRaw);
  if(!publishAt && !providedDate){skippedCount++;continue;}
  if(publishAt?.instant && publishAt.instant.getTime()>Date.now()){futureCount++;console.log(`⏳ Pendiente hasta ${publishAt.timestamp}: ${slug}`);continue;}
- const date=publishAt?.date||providedDate;if(!allowBackfill && isPublicationTooOld(publishAt,date,Date.now(),maxAgeDays)){staleCount++;continue;}const articleDate=publishAt?.timestamp||date;const filename=`${date}-${slug}.md`,filepath=path.join(postsDir,filename);const rawFraseImagen=(fraseImagenRaw||'').trim()||title;const fraseImagen=normalizeImagePhraseCase(rawFraseImagen,title);const imagePhraseWasNormalized=fraseImagen!==rawFraseImagen;
+ const date=publishAt?.date||providedDate;if(!allowBackfill && isPublicationTooOld(publishAt,date,Date.now(),maxAgeDays)){staleCount++;continue;}const articleDate=publishAt?.timestamp||date;const filename=`${date}-${slug}.md`,filepath=path.join(postsDir,filename);
+ // A scheduled retry may have a newer publish time. Never create a second web post for the same slug.
+ const existingSlugFile=fs.readdirSync(postsDir).find(candidate=>candidate.endsWith(`-${slug}.md`));
+ if(existingSlugFile && existingSlugFile!==filename){skippedCount++;existingFiles.push(existingSlugFile);console.log(`♻️ Skip duplicate slug during retry: ${slug}`);continue;}
+ const rawFraseImagen=(fraseImagenRaw||'').trim()||title;const fraseImagen=normalizeImagePhraseCase(rawFraseImagen,title);const imagePhraseWasNormalized=fraseImagen!==rawFraseImagen;
  if(fs.existsSync(filepath)){
   if(imagePhraseWasNormalized){
    try{
